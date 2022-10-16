@@ -8,3 +8,6 @@ This project will be a game engine
 ## Things in research
 
 ## Things learned
+
+## Reading history
+- Runtime engine architecture
