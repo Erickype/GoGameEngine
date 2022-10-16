@@ -11,3 +11,4 @@ This project will be a game engine
 
 ## Reading history
 - Runtime engine architecture
+- Tools and asset pipeline
