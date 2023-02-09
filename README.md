@@ -8,6 +8,8 @@ This project will be a game engine
 ## Things in research
 
 ## Things learned
+- Make a game only using the defaul Go
+- Make a small package to build games
 
 ## Reading history
 - Runtime engine architecture
