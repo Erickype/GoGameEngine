@@ -8,3 +8,12 @@ type Brain struct {
 	Midbrain  BrainComponents.Midbrain
 	Hindbrain BrainComponents.Hindbrain
 }
+
+func NewBrain(name string) Brain {
+	return Brain{
+		Name:      name,
+		Forebrain: BrainComponents.Forebrain{},
+		Midbrain:  BrainComponents.Midbrain{},
+		Hindbrain: BrainComponents.Hindbrain{},
+	}
+}
