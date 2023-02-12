@@ -1,14 +1,17 @@
 package Render
 
-import "github.com/Erickype/GoGameEngine/Common"
+import (
+	"github.com/Erickype/GoGameEngine/Common"
+	"github.com/Erickype/GoGameEngine/Texture"
+)
 
-type Manager struct {
-}
+type Manager struct{}
 
 var instance *Manager
 
-func (m Manager) New() Common.IManager {
-	return &Manager{}
+func (m Manager) Init() {
+	m.GetInstance()
+	m.Start()
 }
 
 func (m Manager) GetInstance() Common.IManager {
@@ -19,11 +22,11 @@ func (m Manager) GetInstance() Common.IManager {
 }
 
 func (m Manager) Start() Common.IManager {
-	//TODO implement me
-	panic("implement me")
+	Texture.Manager{}.Init()
+	return instance
 }
 
-func (m Manager) ShutDown() Common.IManager {
+func (Manager) ShutDown() Common.IManager {
 	//TODO implement me
 	panic("implement me")
 }
