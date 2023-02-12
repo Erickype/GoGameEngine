@@ -1,7 +1,7 @@
 package Common
 
 type IManager interface {
-	New() IManager
+	Init()
 	GetInstance() IManager
 	Start() IManager
 	ShutDown() IManager
