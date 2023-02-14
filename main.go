@@ -1,8 +1,8 @@
 package main
 
 import (
+	"github.com/Erickype/GoGameEngine/SDK"
 	"github.com/go-gl/glfw/v3.3/glfw"
-	"github.com/vulkan-go/vulkan"
 	"runtime"
 )
 
@@ -19,12 +19,7 @@ func main() {
 	}
 	defer glfw.Terminate()
 
-	vulkan.SetGetInstanceProcAddr(glfw.GetVulkanGetInstanceProcAddress())
-
-	err = vulkan.Init()
-	if err != nil {
-		panic(err)
-	}
+	SDK.InitializeVulkan()
 
 	window, err := glfw.CreateWindow(640, 480, "Testing", nil, nil)
 	if err != nil {
