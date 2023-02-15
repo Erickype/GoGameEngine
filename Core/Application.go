@@ -3,18 +3,25 @@ package Core
 import "log"
 
 type IApplication interface {
-	Run()
-	Destroy()
+	run()
+	destroy()
 }
 
 type Application struct{}
 
-func (Application) Run() {
+func (Application) run() {
 	for {
 		log.Println("Running app")
 	}
 }
 
-func (Application) Destroy() {
+func (Application) destroy() {
+}
 
+// CreateApplication This is the entry point to create an application
+func CreateApplication() {
+	log.Println("Starting engine")
+	application := Application{}
+	application.run()
+	application.destroy()
 }
