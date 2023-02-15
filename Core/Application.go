@@ -2,8 +2,19 @@ package Core
 
 import "log"
 
-func Run() {
+type IApplication interface {
+	Run()
+	Destroy()
+}
+
+type Application struct{}
+
+func (Application) Run() {
 	for {
-		log.Println("Running!!")
+		log.Println("Running app")
 	}
+}
+
+func (Application) Destroy() {
+
 }
