@@ -1,27 +1,40 @@
 package Core
 
-import "log"
+import (
+	"github.com/Erickype/GoGameEngine/Log"
+	"time"
+)
 
 type IApplication interface {
 	run()
 	destroy()
+	init()
 }
 
-type Application struct{}
+type Application struct {
+	coreLogger   *Log.CoreLogger
+	clientLogger *Log.ClientLogger
+}
 
-func (Application) run() {
+func (a *Application) run() {
 	for {
-		log.Println("Running app")
+		time.Sleep(time.Second)
+		a.clientLogger.Info("Running")
 	}
 }
 
-func (Application) destroy() {
+func (a *Application) destroy() {
+}
+
+func (a *Application) init() {
+	a.coreLogger, a.clientLogger = InitLogSystem()
+	a.coreLogger.Info("Starting engine!!")
 }
 
 // CreateApplication This is the entry point to create an application
 func CreateApplication() {
-	log.Println("Starting engine")
-	application := Application{}
+	application := &Application{}
+	application.init()
 	application.run()
 	application.destroy()
 }
