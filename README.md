@@ -15,3 +15,28 @@ This project will be a game engine
 - Runtime engine architecture
 - Tools and asset pipeline
 - Parallelism and concurrency
+
+# Things done
+
+## Getting started
+Use the go get command to use the Game Engine
+
+```
+go get github.com/Erickype/GoGameEngine
+```
+
+## Entry point
+- The basic entry point is in the Core package, 
+that creates and run the application. Use the command
+`Core.CreateApplication()` after importing the 
+package.
+
+```
+Core.CreateApplication()
+```
+
+## Log System
+- The package Log contains the methods and definitions
+for the log system. At this time it is only used
+for the `Core.CreateApplication()` method.
+- It will print info in the client and the engine.
