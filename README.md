@@ -8,7 +8,7 @@ This project will be a game engine
 ## Things in research
 
 ## Things learned
-- Make a game only using the defaul Go
+- Make a game only using the default Go
 - Make a small package to build games
 
 ## Reading history
@@ -40,3 +40,7 @@ Core.CreateApplication()
 for the log system. At this time it is only used
 for the `Core.CreateApplication()` method.
 - It will print info in the client and the engine.
+
+## Event System
+- The package Event contains all the files and
+methods related to the event system.
