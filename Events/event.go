@@ -1,9 +1,11 @@
 package Events
 
-type Types int
+import "fmt"
+
+type Type int
 
 const (
-	None Types = iota
+	None Type = iota
 	WindowClose
 	WindowResize
 	WindowFocus
@@ -20,7 +22,7 @@ const (
 	MouseScrolled
 )
 
-func (e Types) String() string {
+func (e Type) String() string {
 	switch e {
 	case None:
 		return "None"
@@ -82,4 +84,40 @@ func (c Category) String() string {
 	default:
 		return "Unknown"
 	}
+}
+
+type IEvent interface {
+	GetEventType() *Type
+	GetName() string
+	GetCategoryFlags() int
+	IsInCategory() bool
+	ToString() string
+}
+
+type Event struct {
+	dispatcher    *EventDispatcher
+	handled       bool
+	eventCategory Category
+	eventType     Type
+}
+
+func (e *Event) GetEventType() Type {
+	return e.eventType
+}
+
+func (e *Event) GetName() string {
+	return e.eventType.String()
+}
+
+func (e *Event) GetCategoryFlags() int {
+	return int(e.eventCategory)
+}
+
+func (e *Event) IsInCategory() bool {
+	return e.GetCategoryFlags() == int(e.eventCategory)
+}
+
+func (e *Event) ToString() string {
+	s := fmt.Sprintf("Category: %s, Type: %s", e.eventCategory, e.eventType)
+	return s
 }
