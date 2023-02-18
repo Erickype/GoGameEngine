@@ -1,4 +1,4 @@
-package Event
+package Events
 
 type Types int
 
@@ -52,6 +52,33 @@ func (e Types) String() string {
 		return "MouseMoved"
 	case MouseScrolled:
 		return "MouseScrolled"
+	default:
+		return "Unknown"
+	}
+}
+
+type Category int
+
+const (
+	Application Category = iota
+	Input
+	Keyboard
+	Mouse
+	MouseButton
+)
+
+func (c Category) String() string {
+	switch c {
+	case Application:
+		return "Application"
+	case Input:
+		return "Input"
+	case Keyboard:
+		return "Keyboard"
+	case Mouse:
+		return "Mouse"
+	case MouseButton:
+		return "MouseButton"
 	default:
 		return "Unknown"
 	}
