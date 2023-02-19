@@ -18,6 +18,7 @@ func (k *keyEvent) GetKeyCode() int {
 
 type IKeyPressedEvent interface {
 	GetRepeatCount() int
+	Init()
 }
 
 // KeyPressedEvent is the struct that implements the event, have the reference to the common keyEvent
@@ -32,4 +33,9 @@ func (k *KeyPressedEvent) GetRepeatCount() int {
 
 func (k *KeyPressedEvent) ToString() string {
 	return fmt.Sprintf("KeyPressedEvent: %d ( %d repeats)", k.keyCode, k.repeatCount)
+}
+
+func (k *KeyPressedEvent) Init() {
+	k.eventType = KeyPressed
+	k.eventCategory = Keyboard | Input
 }
