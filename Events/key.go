@@ -39,3 +39,21 @@ func (k *KeyPressedEvent) Init() {
 	k.eventType = KeyPressed
 	k.eventCategory = Keyboard | Input
 }
+
+// IKeyReleasedEvent interface to implement KeyReleasedEvent
+type IKeyReleasedEvent interface {
+	Init()
+}
+
+type KeyReleasedEvent struct {
+	*keyEvent
+}
+
+func (k *KeyReleasedEvent) ToString() string {
+	return fmt.Sprintf("KeyReleasedEvent: %d", k.keyCode)
+}
+
+func (k *KeyReleasedEvent) Init() {
+	k.eventType = KeyReleased
+	k.eventCategory = Keyboard | Input
+}
