@@ -86,6 +86,7 @@ func (c Category) String() string {
 	}
 }
 
+// IEvent interface to implement an Event
 type IEvent interface {
 	GetEventType() *Type
 	GetName() string
@@ -94,6 +95,7 @@ type IEvent interface {
 	ToString() string
 }
 
+// Event struct that implement IEvent, has a reference to EventDispatcher and eventCategory, eventType and handled fields
 type Event struct {
 	dispatcher    *EventDispatcher
 	handled       bool
