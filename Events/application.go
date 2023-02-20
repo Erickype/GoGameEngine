@@ -30,3 +30,13 @@ func (w *WindowResizeEvent) Init() {
 	w.eventType = WindowResize
 	w.eventCategory = Application
 }
+
+// WindowCloseEvent struct to implement the event
+type WindowCloseEvent struct {
+	*Event
+}
+
+func (w *WindowCloseEvent) Init() {
+	w.eventType = WindowClose
+	w.eventCategory = Application
+}
