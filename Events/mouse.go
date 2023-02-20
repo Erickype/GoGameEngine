@@ -1,9 +1,11 @@
 package Events
 
+import "fmt"
+
+// IMouseMovedEvent interface to implement MouseMovedEvent
 type IMouseMovedEvent interface {
 	GetX() float64
 	GetY() float64
-	Init()
 }
 
 type MouseMovedEvent struct {
@@ -23,4 +25,33 @@ func (m *MouseMovedEvent) GetY() float64 {
 func (m *MouseMovedEvent) Init() {
 	m.Event.eventType = MouseMoved
 	m.Event.eventCategory = Mouse | Input
+}
+
+// IMouseScrolledEvent interface to implement MouseScrolledEvent
+type IMouseScrolledEvent interface {
+	GetXOffset() float64
+	GetYOffset() float64
+}
+
+type MouseScrolledEvent struct {
+	*Event
+	xOffset float64
+	yOffset float64
+}
+
+func (m *MouseScrolledEvent) GetXOffset() float64 {
+	return m.xOffset
+}
+
+func (m *MouseScrolledEvent) GetYOffset() float64 {
+	return m.yOffset
+}
+
+func (m *MouseScrolledEvent) ToString() string {
+	return fmt.Sprintf("MouseScrolledEvent: %f, %f", m.xOffset, m.yOffset)
+}
+
+func (m *MouseScrolledEvent) Init() {
+	m.eventType = MouseScrolled
+	m.eventCategory = Mouse | Input
 }
