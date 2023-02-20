@@ -121,8 +121,7 @@ func (e *Event) IsInCategory() bool {
 }
 
 func (e *Event) ToString() string {
-	s := fmt.Sprintf("Category: %s, Type: %s", e.eventCategory, e.eventType)
-	return s
+	return fmt.Sprintf("Category: %s, Type: %s", e.eventCategory, e.eventType)
 }
 
 func (e *Event) Init() {}
