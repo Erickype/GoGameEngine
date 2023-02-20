@@ -93,6 +93,7 @@ type IEvent interface {
 	GetCategoryFlags() int
 	IsInCategory() bool
 	ToString() string
+	Init()
 }
 
 // Event struct that implement IEvent, has a reference to EventDispatcher and eventCategory, eventType and handled fields
@@ -123,3 +124,5 @@ func (e *Event) ToString() string {
 	s := fmt.Sprintf("Category: %s, Type: %s", e.eventCategory, e.eventType)
 	return s
 }
+
+func (e *Event) Init() {}
