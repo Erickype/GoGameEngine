@@ -85,3 +85,19 @@ func (m *MouseButtonPressedEvent) Init() {
 	m.eventType = MouseButtonPressed
 	m.eventCategory = Mouse | Input
 }
+
+// IMouseButtonReleaseEvent interface to implement MouseButtonReleaseEvent
+type IMouseButtonReleaseEvent interface{}
+
+type MouseButtonReleaseEvent struct {
+	*MouseButtonEvent
+}
+
+func (m *MouseButtonReleaseEvent) ToString() string {
+	return fmt.Sprintf("MouseButtonReleasedEvent: %d", m.mouseButton)
+}
+
+func (m *MouseButtonReleaseEvent) Init() {
+	m.eventType = MouseButtonReleased
+	m.eventCategory = Mouse | Input
+}
