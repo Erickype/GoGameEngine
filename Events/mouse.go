@@ -55,3 +55,33 @@ func (m *MouseScrolledEvent) Init() {
 	m.eventType = MouseScrolled
 	m.eventCategory = Mouse | Input
 }
+
+// IMouseButtonEvent common interface to MouseButtonEvents
+type IMouseButtonEvent interface {
+	GetMouseButton() int
+}
+
+type MouseButtonEvent struct {
+	*Event
+	mouseButton int
+}
+
+func (m *MouseButtonEvent) GetMouseButton() int {
+	return m.mouseButton
+}
+
+// IMouseButtonPressedEvent interface to implement MouseButtonPressedEvent
+type IMouseButtonPressedEvent interface{}
+
+type MouseButtonPressedEvent struct {
+	*MouseButtonEvent
+}
+
+func (m *MouseButtonPressedEvent) ToString() string {
+	return fmt.Sprintf("MouseButtonPressedEvent: %d", m.mouseButton)
+}
+
+func (m *MouseButtonPressedEvent) Init() {
+	m.eventType = MouseButtonPressed
+	m.eventCategory = Mouse | Input
+}
