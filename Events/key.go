@@ -18,7 +18,6 @@ func (k *keyEvent) GetKeyCode() int {
 
 type IKeyPressedEvent interface {
 	GetRepeatCount() int
-	Init()
 }
 
 // KeyPressedEvent is the struct that implements the event, have the reference to the common keyEvent
@@ -41,9 +40,7 @@ func (k *KeyPressedEvent) Init() {
 }
 
 // IKeyReleasedEvent interface to implement KeyReleasedEvent
-type IKeyReleasedEvent interface {
-	Init()
-}
+type IKeyReleasedEvent interface{}
 
 type KeyReleasedEvent struct {
 	*keyEvent
