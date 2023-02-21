@@ -2,10 +2,10 @@ package Events
 
 import "fmt"
 
-type Type int
+type EventType int
 
 const (
-	None Type = iota
+	None EventType = iota
 	WindowClose
 	WindowResize
 	WindowFocus
@@ -22,7 +22,7 @@ const (
 	MouseScrolled
 )
 
-func (e Type) String() string {
+func (e EventType) String() string {
 	switch e {
 	case None:
 		return "None"
@@ -88,7 +88,7 @@ func (c Category) String() string {
 
 // IEvent interface to implement an Event
 type IEvent interface {
-	GetEventType() *Type
+	GetEventType() EventType
 	GetName() string
 	GetCategoryFlags() int
 	IsInCategory() bool
@@ -100,10 +100,10 @@ type IEvent interface {
 type Event struct {
 	handled       bool
 	eventCategory Category
-	eventType     Type
+	eventType     EventType
 }
 
-func (e *Event) GetEventType() Type {
+func (e *Event) GetEventType() EventType {
 	return e.eventType
 }
 
@@ -120,7 +120,7 @@ func (e *Event) IsInCategory() bool {
 }
 
 func (e *Event) ToString() string {
-	return fmt.Sprintf("Category: %s, Type: %s", e.eventCategory, e.eventType)
+	return fmt.Sprintf("Category: %s, EventType: %s", e.eventCategory, e.eventType)
 }
 
 func (e *Event) Init() {}
