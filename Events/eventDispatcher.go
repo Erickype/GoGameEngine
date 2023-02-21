@@ -21,9 +21,13 @@ func (d *EventDispatcher) Dispatch(event IEvent) bool {
 	response := false
 	switch event.(type) {
 	case *MouseMovedEvent:
-		mouseMovedEvent := event.(*MouseMovedEvent)
-		mouseMovedEvent.handled = true
-		response = mouseMovedEvent.handled
+		concreteEvent := event.(*MouseMovedEvent)
+		concreteEvent.handled = true
+		response = concreteEvent.handled
+	case *MouseScrolledEvent:
+		concreteEvent := event.(*MouseScrolledEvent)
+		concreteEvent.handled = true
+		response = concreteEvent.handled
 	}
 	return response
 }
