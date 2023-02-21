@@ -93,6 +93,7 @@ type IEvent interface {
 	GetCategoryFlags() int
 	IsInCategory() bool
 	ToString() string
+	WasHandled() bool
 	Init()
 }
 
@@ -117,6 +118,10 @@ func (e *Event) GetCategoryFlags() int {
 
 func (e *Event) IsInCategory() bool {
 	return e.GetCategoryFlags() == int(e.eventCategory)
+}
+
+func (e *Event) WasHandled() bool {
+	return e.handled
 }
 
 func (e *Event) ToString() string {
