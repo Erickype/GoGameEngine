@@ -44,7 +44,14 @@ func (d *EventDispatcher) Dispatch(event IEvent) bool {
 		concreteEvent := event.(*KeyReleasedEvent)
 		concreteEvent.handled = true
 		response = concreteEvent.handled
-
+	case *WindowResizeEvent:
+		concreteEvent := event.(*WindowResizeEvent)
+		concreteEvent.handled = true
+		response = concreteEvent.handled
+	case *WindowCloseEvent:
+		concreteEvent := event.(*WindowCloseEvent)
+		concreteEvent.handled = true
+		response = concreteEvent.handled
 	}
 	return response
 }
