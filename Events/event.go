@@ -98,7 +98,6 @@ type IEvent interface {
 
 // Event struct that implement IEvent, has a reference to EventDispatcher and eventCategory, eventType and handled fields
 type Event struct {
-	dispatcher    *EventDispatcher
 	handled       bool
 	eventCategory Category
 	eventType     Type
