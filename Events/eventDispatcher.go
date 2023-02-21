@@ -32,6 +32,11 @@ func (d *EventDispatcher) Dispatch(event IEvent) bool {
 		concreteEvent := event.(*MouseButtonPressedEvent)
 		concreteEvent.handled = true
 		response = concreteEvent.handled
+	case *MouseButtonReleaseEvent:
+		concreteEvent := event.(*MouseButtonReleaseEvent)
+		concreteEvent.handled = true
+		response = concreteEvent.handled
+
 	}
 	return response
 }
