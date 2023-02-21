@@ -13,7 +13,7 @@ func (e *EventManager) GetDispatcher() *EventDispatcher {
 	return e.eventDispatcher.GetInstance()
 }
 
-func (e *EventManager) CreateEvent(eventType EventType) IEvent {
+func (e *EventManager) CreateEvent(eventType EventType) *MouseMovedEvent {
 
 	event := Event{
 		handled:       false,
