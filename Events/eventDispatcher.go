@@ -36,6 +36,14 @@ func (d *EventDispatcher) Dispatch(event IEvent) bool {
 		concreteEvent := event.(*MouseButtonReleaseEvent)
 		concreteEvent.handled = true
 		response = concreteEvent.handled
+	case *KeyPressedEvent:
+		concreteEvent := event.(*KeyPressedEvent)
+		concreteEvent.handled = true
+		response = concreteEvent.handled
+	case *KeyReleasedEvent:
+		concreteEvent := event.(*KeyReleasedEvent)
+		concreteEvent.handled = true
+		response = concreteEvent.handled
 
 	}
 	return response
