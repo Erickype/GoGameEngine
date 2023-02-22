@@ -1,9 +1,9 @@
 package Events
 
-var instance *EventDispatcher
+var dispatcherInstance *EventDispatcher
 
 func init() {
-	instance = &EventDispatcher{}
+	dispatcherInstance = &EventDispatcher{}
 }
 
 type IEventDispatcher interface {
@@ -14,7 +14,7 @@ type IEventDispatcher interface {
 type EventDispatcher struct{}
 
 func (d *EventDispatcher) GetInstance() *EventDispatcher {
-	return instance
+	return dispatcherInstance
 }
 
 func (d *EventDispatcher) Dispatch(event IEvent) bool {
