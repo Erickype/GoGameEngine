@@ -1,34 +1,16 @@
 package Events
 
 type IEventManager interface {
-	GetDispatcher() *EventDispatcher
-	CreateEvent(eventType EventType) *IEvent
+	Dispatch() bool
+	CreateEvent(eventType EventType) IEvent
 }
 
-type EventManager struct {
-	eventDispatcher *EventDispatcher
+type EventManager struct{}
+
+func (e *EventManager) Dispatch(event IEvent) bool {
+	return dispatcherInstance.Dispatch(event)
 }
 
-func (e *EventManager) GetDispatcher() *EventDispatcher {
-	return e.eventDispatcher.GetInstance()
-}
-
-func (e *EventManager) CreateEvent(eventType EventType) *MouseMovedEvent {
-
-	event := Event{
-		handled:       false,
-		eventCategory: 0,
-		eventType:     0,
-	}
-
-	switch eventType {
-	case MouseMoved:
-		return &MouseMovedEvent{
-			Event:  &event,
-			mouseX: 0,
-			mouseY: 0,
-		}
-	default:
-		return nil
-	}
+func (e *EventManager) CreateEvent(eventType EventType) IEvent {
+	return factoryInstance.CreateEvent(eventType)
 }
