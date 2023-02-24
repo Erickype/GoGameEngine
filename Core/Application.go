@@ -1,8 +1,9 @@
 package Core
 
 import (
-	"github.com/Erickype/GoGameEngine/Log"
-	"time"
+	common "github.com/Erickype/GoGameEngine/Common"
+	"github.com/Erickype/GoGameEngine/Platform/Windows"
+	"github.com/Erickype/GoGameEngine/Window"
 )
 
 type IApplication interface {
@@ -12,28 +13,26 @@ type IApplication interface {
 }
 
 type Application struct {
-	coreLogger   *Log.CoreLogger
-	clientLogger *Log.ClientLogger
+	window  *Windows.Window
+	running bool
 }
 
 func (a *Application) run() {
-	for i := 0; i < 10; i++ {
-		time.Sleep(time.Second)
-		a.clientLogger.Info("Running")
-	}
+	a.window.OnUpdate()
 }
 
 func (a *Application) destroy() {
-	a.coreLogger.Fatal("Destroying: ", true)
+	common.CoreLogger.Fatal("Destroying: ", true)
 }
 
 func (a *Application) init() {
-	a.coreLogger, a.clientLogger = InitLogSystem()
-	a.coreLogger.Info("Starting engine!!")
-	a.coreLogger.Warn("Develop version: ", true)
-	a.coreLogger.Error("Errors: ", false)
-	a.coreLogger.Debug("Debug: ", true)
-	a.coreLogger.Trace("Trace")
+	common.CoreLogger.Info("Starting engine!!")
+	a.running = true
+	a.window = Windows.Create(&Window.Properties{
+		Title:  "GoGameEngine",
+		Width:  1280,
+		Height: 720,
+	})
 }
 
 // CreateApplication This is the entry point to create an application
