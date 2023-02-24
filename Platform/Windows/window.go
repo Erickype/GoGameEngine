@@ -13,7 +13,7 @@ type data struct {
 	title         string
 	width         int
 	height        int
-	eventCallback abstractWindow.EventCallBackFn
+	eventCallback *abstractWindow.EventCallBackFn
 	vSync         bool
 }
 
@@ -23,18 +23,15 @@ type Window struct {
 }
 
 func (w *Window) GetWidth() int {
-	//TODO implement me
-	panic("implement me")
+	return w.data.width
 }
 
 func (w *Window) GetHeight() int {
-	//TODO implement me
-	panic("implement me")
+	return w.data.height
 }
 
 func (w *Window) SetEventCallback(callback *abstractWindow.EventCallBackFn) {
-	//TODO implement me
-	panic("implement me")
+	w.data.eventCallback = callback
 }
 
 func (w *Window) SetVsync(enabled bool) {
@@ -47,13 +44,12 @@ func (w *Window) SetVsync(enabled bool) {
 }
 
 func (w *Window) IsVSync() bool {
-	//TODO implement me
-	panic("implement me")
+	return w.data.vSync
 }
 
 func (w *Window) OnUpdate() {
-	//TODO implement me
-	panic("implement me")
+	w.glfwWindow.SwapBuffers()
+	glfw.PollEvents()
 }
 
 func (w *Window) Shutdown() {
