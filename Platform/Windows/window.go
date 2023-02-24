@@ -1,9 +1,13 @@
 package Windows
 
 import (
+	"github.com/Erickype/GoGameEngine/Log"
 	abstractWindow "github.com/Erickype/GoGameEngine/Window"
 	"github.com/go-gl/glfw/v3.3/glfw"
+	"unsafe"
 )
+
+var GLFWInitialized bool = false
 
 type data struct {
 	title         string
@@ -14,8 +18,8 @@ type data struct {
 }
 
 type Window struct {
-	glfwWindow glfw.Window
-	data       data
+	glfwWindow *glfw.Window
+	data       *data
 }
 
 func (w *Window) GetWidth() int {
@@ -52,12 +56,42 @@ func (w *Window) OnUpdate() {
 	panic("implement me")
 }
 
-func (w *Window) Create(props *abstractWindow.Properties) abstractWindow.IWindow {
-	//TODO implement me
-	panic("implement me")
+func (w *Window) Shutdown() {
+	w.glfwWindow.Destroy()
 }
 
 func (w *Window) Init() {
-	//TODO implement me
-	panic("implement me")
+
+	Log.InstanceCoreLogger.Info("Creating window", w.data.title, w.data.width, w.data.height)
+
+	if !GLFWInitialized {
+		err := glfw.Init()
+		if err != nil {
+			Log.InstanceCoreLogger.Fatal(err)
+		}
+		defer glfw.Terminate()
+		GLFWInitialized = true
+	}
+
+	window, err := glfw.CreateWindow(w.data.width, w.data.height, w.data.title, nil, nil)
+	if err != nil {
+		Log.InstanceCoreLogger.Fatal(err)
+	}
+	w.glfwWindow = window
+	w.glfwWindow.MakeContextCurrent()
+	w.glfwWindow.SetUserPointer(unsafe.Pointer(&w.data))
+}
+
+func Create(props *abstractWindow.Properties) *Window {
+	window := &Window{
+		data: &data{
+			title:  props.Title,
+			width:  props.Width,
+			height: props.Height,
+		},
+	}
+
+	window.Init()
+
+	return window
 }
