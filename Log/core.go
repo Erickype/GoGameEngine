@@ -2,13 +2,6 @@ package Log
 
 import "github.com/withmandala/go-log"
 
-var InstanceCoreLogger *CoreLogger
-
-func init() {
-	InstanceCoreLogger = &CoreLogger{}
-	InstanceCoreLogger.Init()
-}
-
 type CoreLogger struct {
 	logger *log.Logger
 }

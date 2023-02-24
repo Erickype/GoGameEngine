@@ -1,7 +1,7 @@
 package Windows
 
 import (
-	"github.com/Erickype/GoGameEngine/Log"
+	common "github.com/Erickype/GoGameEngine/Common"
 	abstractWindow "github.com/Erickype/GoGameEngine/Window"
 	"github.com/go-gl/glfw/v3.3/glfw"
 	"unsafe"
@@ -60,13 +60,13 @@ func (w *Window) Shutdown() {
 
 func (w *Window) Init() {
 
-	Log.InstanceCoreLogger.Info("Creating window", w.data.title, w.data.width, w.data.height)
+	common.CoreLogger.Info("Creating window", w.data.title, w.data.width, w.data.height)
 
 	initGlfw()
 
 	window, err := glfw.CreateWindow(w.data.width, w.data.height, w.data.title, nil, nil)
 	if err != nil {
-		Log.InstanceCoreLogger.Fatal(err)
+		common.CoreLogger.Fatal(err)
 	}
 	w.glfwWindow = window
 	w.glfwWindow.MakeContextCurrent()
@@ -76,9 +76,9 @@ func (w *Window) Init() {
 func initGlfw() {
 	if !glfwInitialized {
 		if err := glfw.Init(); err != nil {
-			Log.InstanceCoreLogger.Fatal(err)
+			common.CoreLogger.Fatal(err)
 		}
-		Log.InstanceCoreLogger.Info("GLFW initialized")
+		common.CoreLogger.Info("GLFW initialized")
 		glfwInitialized = true
 	}
 }
