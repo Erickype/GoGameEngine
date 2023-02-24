@@ -7,7 +7,7 @@ import (
 	"unsafe"
 )
 
-var GLFWInitialized bool = false
+var glfwInitialized = false
 
 type data struct {
 	title         string
@@ -48,8 +48,10 @@ func (w *Window) IsVSync() bool {
 }
 
 func (w *Window) OnUpdate() {
-	w.glfwWindow.SwapBuffers()
-	glfw.PollEvents()
+	for !w.glfwWindow.ShouldClose() {
+		w.glfwWindow.SwapBuffers()
+		glfw.PollEvents()
+	}
 }
 
 func (w *Window) Shutdown() {
@@ -60,14 +62,7 @@ func (w *Window) Init() {
 
 	Log.InstanceCoreLogger.Info("Creating window", w.data.title, w.data.width, w.data.height)
 
-	if !GLFWInitialized {
-		err := glfw.Init()
-		if err != nil {
-			Log.InstanceCoreLogger.Fatal(err)
-		}
-		defer glfw.Terminate()
-		GLFWInitialized = true
-	}
+	initGlfw()
 
 	window, err := glfw.CreateWindow(w.data.width, w.data.height, w.data.title, nil, nil)
 	if err != nil {
@@ -75,7 +70,17 @@ func (w *Window) Init() {
 	}
 	w.glfwWindow = window
 	w.glfwWindow.MakeContextCurrent()
-	w.glfwWindow.SetUserPointer(unsafe.Pointer(&w.data))
+	w.glfwWindow.SetUserPointer(unsafe.Pointer(w.data))
+}
+
+func initGlfw() {
+	if !glfwInitialized {
+		if err := glfw.Init(); err != nil {
+			Log.InstanceCoreLogger.Fatal(err)
+		}
+		Log.InstanceCoreLogger.Info("GLFW initialized")
+		glfwInitialized = true
+	}
 }
 
 func Create(props *abstractWindow.Properties) *Window {
@@ -86,8 +91,6 @@ func Create(props *abstractWindow.Properties) *Window {
 			height: props.Height,
 		},
 	}
-
 	window.Init()
-
 	return window
 }
