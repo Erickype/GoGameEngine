@@ -10,20 +10,20 @@ type IWindowResizeEvent interface {
 
 type WindowResizeEvent struct {
 	*Event
-	width  int
-	height int
+	Width  int
+	Height int
 }
 
 func (w *WindowResizeEvent) GetWidth() int {
-	return w.width
+	return w.Width
 }
 
 func (w *WindowResizeEvent) GetHeight() int {
-	return w.height
+	return w.Height
 }
 
 func (w *WindowResizeEvent) ToString() string {
-	return fmt.Sprintf("WindowResizeEvent: %d, %d", w.width, w.height)
+	return fmt.Sprintf("WindowResizeEvent: %d, %d", w.Width, w.Height)
 }
 
 func (w *WindowResizeEvent) Init() {
