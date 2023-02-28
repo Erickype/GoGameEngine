@@ -1,11 +1,5 @@
 package Events
 
-var factoryInstance *EventFactory
-
-func init() {
-	factoryInstance = NewEventFactory()
-}
-
 type EventFactory struct {
 	events map[EventType]IEvent
 }
