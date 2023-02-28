@@ -1,5 +1,11 @@
 package Events
 
+var factoryInstance *EventFactory
+
+func init() {
+	factoryInstance = NewEventFactory()
+}
+
 type EventFactory struct {
 	events map[EventType]IEvent
 }
@@ -45,4 +51,8 @@ func (factory *EventFactory) CreateEvent(eventType EventType) IEvent {
 	}
 
 	return nil
+}
+
+func GetEventFactoryInstance() *EventFactory {
+	return factoryInstance
 }

@@ -7,13 +7,12 @@ func init() {
 }
 
 type IEventDispatcher interface {
-	GetInstance() *EventDispatcher
 	Dispatch(event IEvent) bool
 }
 
 type EventDispatcher struct{}
 
-func (d *EventDispatcher) GetInstance() *EventDispatcher {
+func GetEventDispatcherInstance() *EventDispatcher {
 	return dispatcherInstance
 }
 
