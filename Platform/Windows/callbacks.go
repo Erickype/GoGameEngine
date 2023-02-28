@@ -8,6 +8,7 @@ import (
 
 func declareCallbacks(w *Window) {
 	w.setSizeCallback()
+	w.setCloseCallback()
 }
 
 func (w *Window) setSizeCallback() {
@@ -25,6 +26,16 @@ func (w *Window) setSizeCallback() {
 			resizeEvent.Height = height
 		}
 
+		if data.eventCallback != nil {
+			(*data.eventCallback)(&event)
+		}
+	})
+}
+
+func (w *Window) setCloseCallback() {
+	w.glfwWindow.SetCloseCallback(func(window *glfw.Window) {
+		data := (*data)(window.GetUserPointer())
+		event := common.EventFactory.CreateEvent(Events.WindowClose)
 		if data.eventCallback != nil {
 			(*data.eventCallback)(&event)
 		}

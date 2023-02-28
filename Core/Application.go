@@ -23,9 +23,7 @@ func (a *Application) run() {
 	a.window.OnUpdate()
 }
 
-func (a *Application) destroy() {
-	common.CoreLogger.Fatal("Destroying: ", true)
-}
+func (a *Application) destroy() {}
 
 func (a *Application) init() {
 	common.CoreLogger.Info("Starting engine!!")
