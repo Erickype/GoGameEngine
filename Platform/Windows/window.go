@@ -2,7 +2,6 @@ package Windows
 
 import (
 	common "github.com/Erickype/GoGameEngine/Common"
-	"github.com/Erickype/GoGameEngine/Events"
 	abstractWindow "github.com/Erickype/GoGameEngine/Window"
 	"github.com/go-gl/glfw/v3.3/glfw"
 	"unsafe"
@@ -73,24 +72,7 @@ func (w *Window) Init() {
 	w.glfwWindow.MakeContextCurrent()
 	w.glfwWindow.SetUserPointer(unsafe.Pointer(w.data))
 
-	w.glfwWindow.SetSizeCallback(func(window *glfw.Window, width int, height int) {
-		data := (*data)(window.GetUserPointer())
-		data.width = width
-		data.height = height
-
-		event := common.EventsFactory.CreateEvent(Events.WindowResize)
-
-		// Type assertion to retrieve the WindowResizeEvent value from the IEvent interface type
-		if resizeEvent, ok := event.(*Events.WindowResizeEvent); ok {
-			// Use the resizeEvent variable of type *Events.WindowResizeEvent to access its properties
-			resizeEvent.Width = width
-			resizeEvent.Height = height
-		}
-
-		if data.eventCallback != nil {
-			(*data.eventCallback)(&event)
-		}
-	})
+	declareCallbacks(w)
 }
 
 func initGlfw() {
