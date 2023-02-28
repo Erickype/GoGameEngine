@@ -9,6 +9,7 @@ import (
 func declareCallbacks(w *Window) {
 	w.setSizeCallback()
 	w.setCloseCallback()
+	w.setKeyCallback()
 }
 
 func (w *Window) setSizeCallback() {
@@ -19,16 +20,11 @@ func (w *Window) setSizeCallback() {
 
 		event := common.EventFactory.CreateEvent(Events.WindowResize)
 
-		// Type assertion to retrieve the WindowResizeEvent value from the IEvent interface type
 		if resizeEvent, ok := event.(*Events.WindowResizeEvent); ok {
-			// Use the resizeEvent variable of type *Events.WindowResizeEvent to access its properties
 			resizeEvent.Width = width
 			resizeEvent.Height = height
 		}
-
-		if data.eventCallback != nil {
-			(*data.eventCallback)(&event)
-		}
+		(*data.eventCallback)(&event)
 	})
 }
 
@@ -38,6 +34,37 @@ func (w *Window) setCloseCallback() {
 		event := common.EventFactory.CreateEvent(Events.WindowClose)
 		if data.eventCallback != nil {
 			(*data.eventCallback)(&event)
+		}
+	})
+}
+
+func (w *Window) setKeyCallback() {
+	w.glfwWindow.SetKeyCallback(func(window *glfw.Window, key glfw.Key, scancode int, action glfw.Action, mods glfw.ModifierKey) {
+		data := (*data)(window.GetUserPointer())
+		switch action {
+		case glfw.Press:
+			event := common.EventFactory.CreateEvent(Events.KeyPressed)
+			if keyPressedEvent, ok := event.(*Events.KeyPressedEvent); ok {
+				keyPressedEvent.KeyCode = (int)(key)
+				keyPressedEvent.RepeatCount = 0
+			}
+			(*data.eventCallback)(&event)
+			break
+		case glfw.Release:
+			event := common.EventFactory.CreateEvent(Events.KeyReleased)
+			if keyPressedEvent, ok := event.(*Events.KeyReleasedEvent); ok {
+				keyPressedEvent.KeyCode = (int)(key)
+			}
+			(*data.eventCallback)(&event)
+			break
+		case glfw.Repeat:
+			event := common.EventFactory.CreateEvent(Events.KeyPressed)
+			if keyPressedEvent, ok := event.(*Events.KeyPressedEvent); ok {
+				keyPressedEvent.KeyCode = (int)(key)
+				keyPressedEvent.RepeatCount = 1
+			}
+			(*data.eventCallback)(&event)
+			break
 		}
 	})
 }

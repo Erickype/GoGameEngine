@@ -33,7 +33,7 @@ func NewEventFactory() *EventFactory {
 
 	keyEvent := keyEvent{
 		Event:   &event,
-		keyCode: 0,
+		KeyCode: 0,
 	}
 	factory.events[KeyPressed] = &KeyPressedEvent{keyEvent: &keyEvent}
 	factory.events[KeyReleased] = &KeyReleasedEvent{keyEvent: &keyEvent}
