@@ -2,8 +2,13 @@ package Common
 
 import "github.com/Erickype/GoGameEngine/Events"
 
-var EventsFactory *Events.EventFactory
+var EventFactory *Events.EventFactory
+var _ *Events.EventDispatcher
 
 func initEventsFactory() {
-	EventsFactory = Events.NewEventFactory()
+	EventFactory = Events.GetEventFactoryInstance()
+}
+
+func initEventDispatcher() {
+	_ = Events.GetEventDispatcherInstance()
 }
