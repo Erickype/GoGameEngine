@@ -9,11 +9,11 @@ type IKeyEvent interface {
 // keyEvent common struct to key events
 type keyEvent struct {
 	*Event
-	keyCode int
+	KeyCode int
 }
 
 func (k *keyEvent) GetKeyCode() int {
-	return k.keyCode
+	return k.KeyCode
 }
 
 type IKeyPressedEvent interface {
@@ -23,15 +23,15 @@ type IKeyPressedEvent interface {
 // KeyPressedEvent is the struct that implements the event, have the reference to the common keyEvent
 type KeyPressedEvent struct {
 	*keyEvent
-	repeatCount int
+	RepeatCount int
 }
 
 func (k *KeyPressedEvent) GetRepeatCount() int {
-	return k.repeatCount
+	return k.RepeatCount
 }
 
 func (k *KeyPressedEvent) ToString() string {
-	return fmt.Sprintf("KeyPressedEvent: %d ( %d repeats)", k.keyCode, k.repeatCount)
+	return fmt.Sprintf("KeyPressedEvent: %d ( %d repeats)", k.KeyCode, k.RepeatCount)
 }
 
 func (k *KeyPressedEvent) Init() {
@@ -47,7 +47,7 @@ type KeyReleasedEvent struct {
 }
 
 func (k *KeyReleasedEvent) ToString() string {
-	return fmt.Sprintf("KeyReleasedEvent: %d", k.keyCode)
+	return fmt.Sprintf("KeyReleasedEvent: %d", k.KeyCode)
 }
 
 func (k *KeyReleasedEvent) Init() {
