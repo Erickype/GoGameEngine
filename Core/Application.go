@@ -41,7 +41,8 @@ func (a *Application) init() {
 }
 
 func (a *Application) onEvent(event *Events.IEvent) {
-	common.CoreLogger.Info((*event).ToString())
+	common.EventDispatcher.Dispatch(*event)
+	common.CoreLogger.Trace((*event).ToString())
 }
 
 // CreateApplication This is the entry point to create an application
