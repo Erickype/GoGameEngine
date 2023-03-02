@@ -10,6 +10,7 @@ func declareCallbacks(w *Window) {
 	w.setSizeCallback()
 	w.setCloseCallback()
 	w.setKeyCallback()
+	w.setMouseCallback()
 }
 
 func (w *Window) setSizeCallback() {
@@ -62,6 +63,28 @@ func (w *Window) setKeyCallback() {
 			if keyPressedEvent, ok := event.(*Events.KeyPressedEvent); ok {
 				keyPressedEvent.KeyCode = (int)(key)
 				keyPressedEvent.RepeatCount = 1
+			}
+			(*data.eventCallback)(&event)
+			break
+		}
+	})
+}
+
+func (w *Window) setMouseCallback() {
+	w.glfwWindow.SetMouseButtonCallback(func(window *glfw.Window, button glfw.MouseButton, action glfw.Action, mods glfw.ModifierKey) {
+		data := (*data)(window.GetUserPointer())
+		switch action {
+		case glfw.Press:
+			event := common.EventFactory.CreateEvent(Events.MouseButtonPressed)
+			if keyPressedEvent, ok := event.(*Events.MouseButtonPressedEvent); ok {
+				keyPressedEvent.Button = (int)(button)
+			}
+			(*data.eventCallback)(&event)
+			break
+		case glfw.Release:
+			event := common.EventFactory.CreateEvent(Events.MouseButtonReleased)
+			if keyPressedEvent, ok := event.(*Events.MouseButtonReleaseEvent); ok {
+				keyPressedEvent.Button = (int)(button)
 			}
 			(*data.eventCallback)(&event)
 			break
