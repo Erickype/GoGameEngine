@@ -35,20 +35,20 @@ type IMouseScrolledEvent interface {
 
 type MouseScrolledEvent struct {
 	*Event
-	xOffset float64
-	yOffset float64
+	XOffset float64
+	YOffset float64
 }
 
 func (m *MouseScrolledEvent) GetXOffset() float64 {
-	return m.xOffset
+	return m.XOffset
 }
 
 func (m *MouseScrolledEvent) GetYOffset() float64 {
-	return m.yOffset
+	return m.YOffset
 }
 
 func (m *MouseScrolledEvent) ToString() string {
-	return fmt.Sprintf("MouseScrolledEvent: %f, %f", m.xOffset, m.yOffset)
+	return fmt.Sprintf("MouseScrolledEvent: %f, %f", m.XOffset, m.YOffset)
 }
 
 func (m *MouseScrolledEvent) Init() {
