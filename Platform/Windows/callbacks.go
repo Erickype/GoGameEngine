@@ -11,6 +11,7 @@ func declareCallbacks(w *Window) {
 	w.setCloseCallback()
 	w.setKeyCallback()
 	w.setMouseCallback()
+	w.setScrollCallback()
 }
 
 func (w *Window) setSizeCallback() {
@@ -89,5 +90,17 @@ func (w *Window) setMouseCallback() {
 			(*data.eventCallback)(&event)
 			break
 		}
+	})
+}
+
+func (w *Window) setScrollCallback() {
+	w.glfwWindow.SetScrollCallback(func(window *glfw.Window, xOff float64, yOff float64) {
+		data := (*data)(window.GetUserPointer())
+		event := common.EventFactory.CreateEvent(Events.MouseScrolled)
+		if mouseScrolledEvent, ok := event.(*Events.MouseScrolledEvent); ok {
+			mouseScrolledEvent.XOffset = xOff
+			mouseScrolledEvent.YOffset = yOff
+		}
+		(*data.eventCallback)(&event)
 	})
 }
