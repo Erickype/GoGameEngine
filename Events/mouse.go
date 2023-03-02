@@ -10,16 +10,16 @@ type IMouseMovedEvent interface {
 
 type MouseMovedEvent struct {
 	*Event
-	mouseX float64
-	mouseY float64
+	MouseX float64
+	MouseY float64
 }
 
 func (m *MouseMovedEvent) GetX() float64 {
-	return m.mouseX
+	return m.MouseX
 }
 
 func (m *MouseMovedEvent) GetY() float64 {
-	return m.mouseY
+	return m.MouseY
 }
 
 func (m *MouseMovedEvent) Init() {
