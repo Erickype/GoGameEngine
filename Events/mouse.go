@@ -63,11 +63,11 @@ type IMouseButtonEvent interface {
 
 type MouseButtonEvent struct {
 	*Event
-	mouseButton int
+	Button int
 }
 
 func (m *MouseButtonEvent) GetMouseButton() int {
-	return m.mouseButton
+	return m.Button
 }
 
 // IMouseButtonPressedEvent interface to implement MouseButtonPressedEvent
@@ -78,7 +78,7 @@ type MouseButtonPressedEvent struct {
 }
 
 func (m *MouseButtonPressedEvent) ToString() string {
-	return fmt.Sprintf("MouseButtonPressedEvent: %d", m.mouseButton)
+	return fmt.Sprintf("MouseButtonPressedEvent: %d", m.Button)
 }
 
 func (m *MouseButtonPressedEvent) Init() {
@@ -94,7 +94,7 @@ type MouseButtonReleaseEvent struct {
 }
 
 func (m *MouseButtonReleaseEvent) ToString() string {
-	return fmt.Sprintf("MouseButtonReleasedEvent: %d", m.mouseButton)
+	return fmt.Sprintf("MouseButtonReleasedEvent: %d", m.Button)
 }
 
 func (m *MouseButtonReleaseEvent) Init() {
