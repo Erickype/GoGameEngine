@@ -25,15 +25,15 @@ func NewEventFactory() *EventFactory {
 	factory.events[MouseScrolled] = &MouseScrolledEvent{Event: &event}
 
 	mouseEvent := MouseButtonEvent{
-		Event:       &event,
-		mouseButton: 0,
+		Event:  &event,
+		Button: 0,
 	}
 	factory.events[MouseButtonPressed] = &MouseButtonPressedEvent{MouseButtonEvent: &mouseEvent}
 	factory.events[MouseButtonReleased] = &MouseButtonReleaseEvent{MouseButtonEvent: &mouseEvent}
 
 	keyEvent := keyEvent{
 		Event:   &event,
-		keyCode: 0,
+		KeyCode: 0,
 	}
 	factory.events[KeyPressed] = &KeyPressedEvent{keyEvent: &keyEvent}
 	factory.events[KeyReleased] = &KeyReleasedEvent{keyEvent: &keyEvent}
@@ -51,4 +51,8 @@ func (factory *EventFactory) CreateEvent(eventType EventType) IEvent {
 	}
 
 	return nil
+}
+
+func GetEventFactoryInstance() *EventFactory {
+	return factoryInstance
 }

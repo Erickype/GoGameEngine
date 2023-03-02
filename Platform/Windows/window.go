@@ -71,6 +71,8 @@ func (w *Window) Init() {
 	w.glfwWindow = window
 	w.glfwWindow.MakeContextCurrent()
 	w.glfwWindow.SetUserPointer(unsafe.Pointer(w.data))
+
+	declareCallbacks(w)
 }
 
 func initGlfw() {

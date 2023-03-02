@@ -10,16 +10,16 @@ type IMouseMovedEvent interface {
 
 type MouseMovedEvent struct {
 	*Event
-	mouseX float64
-	mouseY float64
+	MouseX float64
+	MouseY float64
 }
 
 func (m *MouseMovedEvent) GetX() float64 {
-	return m.mouseX
+	return m.MouseX
 }
 
 func (m *MouseMovedEvent) GetY() float64 {
-	return m.mouseY
+	return m.MouseY
 }
 
 func (m *MouseMovedEvent) Init() {
@@ -35,20 +35,20 @@ type IMouseScrolledEvent interface {
 
 type MouseScrolledEvent struct {
 	*Event
-	xOffset float64
-	yOffset float64
+	XOffset float64
+	YOffset float64
 }
 
 func (m *MouseScrolledEvent) GetXOffset() float64 {
-	return m.xOffset
+	return m.XOffset
 }
 
 func (m *MouseScrolledEvent) GetYOffset() float64 {
-	return m.yOffset
+	return m.YOffset
 }
 
 func (m *MouseScrolledEvent) ToString() string {
-	return fmt.Sprintf("MouseScrolledEvent: %f, %f", m.xOffset, m.yOffset)
+	return fmt.Sprintf("MouseScrolledEvent: %f, %f", m.XOffset, m.YOffset)
 }
 
 func (m *MouseScrolledEvent) Init() {
@@ -63,11 +63,11 @@ type IMouseButtonEvent interface {
 
 type MouseButtonEvent struct {
 	*Event
-	mouseButton int
+	Button int
 }
 
 func (m *MouseButtonEvent) GetMouseButton() int {
-	return m.mouseButton
+	return m.Button
 }
 
 // IMouseButtonPressedEvent interface to implement MouseButtonPressedEvent
@@ -78,7 +78,7 @@ type MouseButtonPressedEvent struct {
 }
 
 func (m *MouseButtonPressedEvent) ToString() string {
-	return fmt.Sprintf("MouseButtonPressedEvent: %d", m.mouseButton)
+	return fmt.Sprintf("MouseButtonPressedEvent: %d", m.Button)
 }
 
 func (m *MouseButtonPressedEvent) Init() {
@@ -94,7 +94,7 @@ type MouseButtonReleaseEvent struct {
 }
 
 func (m *MouseButtonReleaseEvent) ToString() string {
-	return fmt.Sprintf("MouseButtonReleasedEvent: %d", m.mouseButton)
+	return fmt.Sprintf("MouseButtonReleasedEvent: %d", m.Button)
 }
 
 func (m *MouseButtonReleaseEvent) Init() {
