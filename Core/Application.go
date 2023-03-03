@@ -10,7 +10,7 @@ import (
 type IApplication interface {
 	run()
 	destroy()
-	init()
+	init(layer *ILayer)
 	onEvent(event *Events.IEvent)
 	PushLayer(layer *ILayer)
 	PushOverlay(overlay *ILayer)
@@ -24,8 +24,10 @@ type Application struct {
 
 func (a *Application) run() {
 	for !a.window.GlfwWindow.ShouldClose() {
-		for _, layer := range *a.layerStack.layers {
-			(*layer).OnUpdate()
+		if *a.layerStack.layerInsert != 0 {
+			for _, layer := range *a.layerStack.layers {
+				(*layer).OnUpdate()
+			}
 		}
 		a.window.OnUpdate()
 	}
@@ -35,7 +37,7 @@ func (a *Application) destroy() {
 	a.running = false
 }
 
-func (a *Application) init() {
+func (a *Application) init(layer *ILayer) {
 	common.CoreLogger.Info("Starting engine!!")
 	a.running = true
 	a.window = Windows.Create(&Window.Properties{
@@ -48,18 +50,22 @@ func (a *Application) init() {
 		a.onEvent(event)
 	})
 	a.window.SetEventCallback(&eventCallbackFn)
+	a.layerStack = &LayerStack{}
 	a.layerStack.Construct()
+	a.PushLayer(layer)
 }
 
 func (a *Application) onEvent(event *Events.IEvent) {
 	common.EventDispatcher.Dispatch(*event)
 	common.CoreLogger.Trace((*event).ToString())
 
-	for i := len(*a.layerStack.layers) - 1; i >= 0; i-- {
-		layer := (*a.layerStack.layers)[i]
-		(*layer).OnEvent(event)
-		if (*event).WasHandled() {
-			break
+	if *a.layerStack.layerInsert != 0 {
+		for i := len(*a.layerStack.layers) - 1; i >= 0; i-- {
+			layer := (*a.layerStack.layers)[i]
+			(*layer).OnEvent(event)
+			if (*event).WasHandled() {
+				break
+			}
 		}
 	}
 
@@ -74,9 +80,9 @@ func (a *Application) PushOverlay(overlay *ILayer) {
 }
 
 // CreateApplication This is the entry point to create an application
-func CreateApplication() {
+func CreateApplication(layer *ILayer) {
 	application := &Application{}
-	application.init()
+	application.init(layer)
 	application.run()
 	application.destroy()
 }
