@@ -12,18 +12,23 @@ type IApplication interface {
 	destroy()
 	init()
 	onEvent(event *Events.IEvent)
+	PushLayer(layer *Layer)
+	PushOverlay(overlay *Layer)
 }
 
 type Application struct {
-	window  *Windows.Window
-	running bool
+	window     *Windows.Window
+	running    bool
+	layerStack *LayerStack
 }
 
 func (a *Application) run() {
 	a.window.OnUpdate()
 }
 
-func (a *Application) destroy() {}
+func (a *Application) destroy() {
+	a.running = false
+}
 
 func (a *Application) init() {
 	common.CoreLogger.Info("Starting engine!!")
@@ -43,6 +48,14 @@ func (a *Application) init() {
 func (a *Application) onEvent(event *Events.IEvent) {
 	common.EventDispatcher.Dispatch(*event)
 	common.CoreLogger.Trace((*event).ToString())
+}
+
+func (a *Application) PushLayer(layer *ILayer) {
+	a.layerStack.PushLayer(layer)
+}
+
+func (a *Application) PushOverlay(overlay *ILayer) {
+	a.layerStack.PushOverlay(overlay)
 }
 
 // CreateApplication This is the entry point to create an application
