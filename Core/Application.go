@@ -23,7 +23,12 @@ type Application struct {
 }
 
 func (a *Application) run() {
-	a.window.OnUpdate()
+	for !a.window.GlfwWindow.ShouldClose() {
+		for _, layer := range *a.layerStack.layers {
+			(*layer).OnUpdate()
+		}
+		a.window.OnUpdate()
+	}
 }
 
 func (a *Application) destroy() {
@@ -43,6 +48,7 @@ func (a *Application) init() {
 		a.onEvent(event)
 	})
 	a.window.SetEventCallback(&eventCallbackFn)
+	a.layerStack.Construct()
 }
 
 func (a *Application) onEvent(event *Events.IEvent) {
