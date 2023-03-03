@@ -2,7 +2,7 @@ package Core
 
 import "github.com/Erickype/GoGameEngine/Events"
 
-type iLayer interface {
+type ILayer interface {
 	OnAttach()
 	OnDetach()
 	OnUpdate()
