@@ -12,8 +12,8 @@ type IApplication interface {
 	destroy()
 	init()
 	onEvent(event *Events.IEvent)
-	PushLayer(layer *Layer)
-	PushOverlay(overlay *Layer)
+	PushLayer(layer *ILayer)
+	PushOverlay(overlay *ILayer)
 }
 
 type Application struct {
