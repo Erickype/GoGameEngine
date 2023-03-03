@@ -1,28 +1,30 @@
 package Core
 
 type _ interface {
-	PushLayer(layer *Layer)
-	PushOverlay(overLay *Layer)
-	PopLayer(layer *Layer)
-	PopOverlay(overlay *Layer)
+	PushLayer(layer *ILayer)
+	PushOverlay(overLay *ILayer)
+	PopLayer(layer *ILayer)
+	PopOverlay(overlay *ILayer)
 	Construct()
+	Begin() *ILayer
+	End() *ILayer
 }
 
 type LayerStack struct {
-	layers      *[]*Layer
+	layers      *[]*ILayer
 	layerInsert *int
 }
 
-func (l *LayerStack) PushLayer(layer *Layer) {
+func (l *LayerStack) PushLayer(layer *ILayer) {
 	*l.layers = append((*l.layers)[:*l.layerInsert], layer)
 	*l.layerInsert++
 }
 
-func (l *LayerStack) PushOverlay(overLay *Layer) {
+func (l *LayerStack) PushOverlay(overLay *ILayer) {
 	*l.layers = append(*l.layers, overLay)
 }
 
-func (l *LayerStack) PopLayer(layer *Layer) {
+func (l *LayerStack) PopLayer(layer *ILayer) {
 	for i, ly := range *l.layers {
 		if ly == layer {
 			*l.layers = append((*l.layers)[:i], (*l.layers)[i+1:]...)
@@ -32,7 +34,7 @@ func (l *LayerStack) PopLayer(layer *Layer) {
 	}
 }
 
-func (l *LayerStack) PopOverlay(overlay *Layer) {
+func (l *LayerStack) PopOverlay(overlay *ILayer) {
 	for i := len(*l.layers) - 1; i >= *l.layerInsert; i-- {
 		ly := (*l.layers)[i]
 		if ly == overlay {
@@ -45,6 +47,14 @@ func (l *LayerStack) PopOverlay(overlay *Layer) {
 func (l *LayerStack) Construct() {
 	i := 0
 	l.layerInsert = &i
-	layers := make([]*Layer, 1)
+	layers := make([]*ILayer, 1)
 	l.layers = &layers
+}
+
+func (l *LayerStack) Begin() *ILayer {
+	return (*l.layers)[0]
+}
+
+func (l *LayerStack) End() *ILayer {
+	return (*l.layers)[len(*l.layers)-1]
 }
