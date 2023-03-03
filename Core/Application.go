@@ -48,6 +48,15 @@ func (a *Application) init() {
 func (a *Application) onEvent(event *Events.IEvent) {
 	common.EventDispatcher.Dispatch(*event)
 	common.CoreLogger.Trace((*event).ToString())
+
+	for i := len(*a.layerStack.layers) - 1; i >= 0; i-- {
+		layer := (*a.layerStack.layers)[i]
+		(*layer).OnEvent(event)
+		if (*event).WasHandled() {
+			break
+		}
+	}
+
 }
 
 func (a *Application) PushLayer(layer *ILayer) {
