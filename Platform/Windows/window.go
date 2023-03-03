@@ -18,7 +18,7 @@ type data struct {
 }
 
 type Window struct {
-	glfwWindow *glfw.Window
+	GlfwWindow *glfw.Window
 	data       *data
 }
 
@@ -48,14 +48,12 @@ func (w *Window) IsVSync() bool {
 }
 
 func (w *Window) OnUpdate() {
-	for !w.glfwWindow.ShouldClose() {
-		w.glfwWindow.SwapBuffers()
-		glfw.PollEvents()
-	}
+	w.GlfwWindow.SwapBuffers()
+	glfw.PollEvents()
 }
 
 func (w *Window) Shutdown() {
-	w.glfwWindow.Destroy()
+	w.GlfwWindow.Destroy()
 }
 
 func (w *Window) Init() {
@@ -68,9 +66,9 @@ func (w *Window) Init() {
 	if err != nil {
 		common.CoreLogger.Fatal(err)
 	}
-	w.glfwWindow = window
-	w.glfwWindow.MakeContextCurrent()
-	w.glfwWindow.SetUserPointer(unsafe.Pointer(w.data))
+	w.GlfwWindow = window
+	w.GlfwWindow.MakeContextCurrent()
+	w.GlfwWindow.SetUserPointer(unsafe.Pointer(w.data))
 
 	declareCallbacks(w)
 }

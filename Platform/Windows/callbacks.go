@@ -16,7 +16,7 @@ func declareCallbacks(w *Window) {
 }
 
 func (w *Window) setSizeCallback() {
-	w.glfwWindow.SetSizeCallback(func(window *glfw.Window, width int, height int) {
+	w.GlfwWindow.SetSizeCallback(func(window *glfw.Window, width int, height int) {
 		data := (*data)(window.GetUserPointer())
 		data.width = width
 		data.height = height
@@ -32,7 +32,7 @@ func (w *Window) setSizeCallback() {
 }
 
 func (w *Window) setCloseCallback() {
-	w.glfwWindow.SetCloseCallback(func(window *glfw.Window) {
+	w.GlfwWindow.SetCloseCallback(func(window *glfw.Window) {
 		data := (*data)(window.GetUserPointer())
 		event := common.EventFactory.CreateEvent(Events.WindowClose)
 		if data.eventCallback != nil {
@@ -42,7 +42,7 @@ func (w *Window) setCloseCallback() {
 }
 
 func (w *Window) setKeyCallback() {
-	w.glfwWindow.SetKeyCallback(func(window *glfw.Window, key glfw.Key, scancode int, action glfw.Action, mods glfw.ModifierKey) {
+	w.GlfwWindow.SetKeyCallback(func(window *glfw.Window, key glfw.Key, scancode int, action glfw.Action, mods glfw.ModifierKey) {
 		data := (*data)(window.GetUserPointer())
 		switch action {
 		case glfw.Press:
@@ -73,7 +73,7 @@ func (w *Window) setKeyCallback() {
 }
 
 func (w *Window) setMouseCallback() {
-	w.glfwWindow.SetMouseButtonCallback(func(window *glfw.Window, button glfw.MouseButton, action glfw.Action, mods glfw.ModifierKey) {
+	w.GlfwWindow.SetMouseButtonCallback(func(window *glfw.Window, button glfw.MouseButton, action glfw.Action, mods glfw.ModifierKey) {
 		data := (*data)(window.GetUserPointer())
 		switch action {
 		case glfw.Press:
@@ -95,7 +95,7 @@ func (w *Window) setMouseCallback() {
 }
 
 func (w *Window) setScrollCallback() {
-	w.glfwWindow.SetScrollCallback(func(window *glfw.Window, xOff float64, yOff float64) {
+	w.GlfwWindow.SetScrollCallback(func(window *glfw.Window, xOff float64, yOff float64) {
 		data := (*data)(window.GetUserPointer())
 		event := common.EventFactory.CreateEvent(Events.MouseScrolled)
 		if mouseScrolledEvent, ok := event.(*Events.MouseScrolledEvent); ok {
@@ -107,7 +107,7 @@ func (w *Window) setScrollCallback() {
 }
 
 func (w *Window) setCursorPosCallback() {
-	w.glfwWindow.SetCursorPosCallback(func(window *glfw.Window, xPos float64, yPos float64) {
+	w.GlfwWindow.SetCursorPosCallback(func(window *glfw.Window, xPos float64, yPos float64) {
 		data := (*data)(window.GetUserPointer())
 		event := common.EventFactory.CreateEvent(Events.MouseMoved)
 		if mouseMovedEvent, ok := event.(*Events.MouseMovedEvent); ok {
