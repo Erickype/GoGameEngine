@@ -59,7 +59,7 @@ func (w *Window) Init() {
 
 	common.CoreLogger.Info("Creating window", w.data.title, w.data.width, w.data.height)
 
-	window := Glad.NewOGLWindow(100, 100, "e",
+	window := Glad.NewOGLWindow(w.data.width, w.data.height, w.data.title,
 		Glad.CoreProfile(true),
 		Glad.Resizable(true),
 		Glad.ContextVersion(4, 5))
