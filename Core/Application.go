@@ -42,8 +42,8 @@ func (a *Application) init(layer *ILayer) {
 	a.running = true
 	a.window = Windows.Create(&Window.Properties{
 		Title:  "GoGameEngine",
-		Width:  1280,
-		Height: 720,
+		Width:  800,
+		Height: 600,
 	})
 
 	eventCallbackFn := Window.EventCallBackFn(func(event *Events.IEvent) {

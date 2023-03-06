@@ -3,7 +3,7 @@ package Windows
 import (
 	common "github.com/Erickype/GoGameEngine/Common"
 	abstractWindow "github.com/Erickype/GoGameEngine/Window"
-	"github.com/go-gl/glfw/v3.3/glfw"
+	"github.com/go-gl/glfw/v3.2/glfw"
 	"unsafe"
 )
 
