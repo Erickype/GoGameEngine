@@ -1,6 +1,7 @@
 package Glad
 
 import (
+	"github.com/go-gl/gl/v4.6-core/gl"
 	"github.com/go-gl/glfw/v3.3/glfw"
 	"log"
 )
@@ -20,7 +21,9 @@ func NewOGLWindow(width, height int, title string, opts ...WinOption) *glfw.Wind
 		log.Fatalln("Failed to create window", err)
 	}
 	win.MakeContextCurrent()
-
+	if err := gl.Init(); err != nil {
+		log.Fatalln("Failed to initialize OpenGL", err)
+	}
 	return win
 }
 
