@@ -22,6 +22,10 @@ func (m *MouseMovedEvent) GetY() float64 {
 	return m.MouseY
 }
 
+func (m *MouseMovedEvent) ToString() string {
+	return fmt.Sprintf("MouseMovedEvent: %.2f, %.2f", m.MouseX, m.MouseY)
+}
+
 func (m *MouseMovedEvent) Init() {
 	m.Event.eventType = MouseMoved
 	m.Event.eventCategory = Mouse | Input
@@ -48,7 +52,7 @@ func (m *MouseScrolledEvent) GetYOffset() float64 {
 }
 
 func (m *MouseScrolledEvent) ToString() string {
-	return fmt.Sprintf("MouseScrolledEvent: %f, %f", m.XOffset, m.YOffset)
+	return fmt.Sprintf("MouseScrolledEvent: %.2f, %.2f", m.XOffset, m.YOffset)
 }
 
 func (m *MouseScrolledEvent) Init() {
