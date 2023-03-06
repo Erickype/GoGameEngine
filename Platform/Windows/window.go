@@ -1,13 +1,12 @@
 package Windows
 
 import (
+	"github.com/Erickype/GoGameEngine/API/Glad"
 	common "github.com/Erickype/GoGameEngine/Common"
 	abstractWindow "github.com/Erickype/GoGameEngine/Window"
 	"github.com/go-gl/glfw/v3.3/glfw"
 	"unsafe"
 )
-
-var glfwInitialized = false
 
 type data struct {
 	title         string
@@ -60,27 +59,15 @@ func (w *Window) Init() {
 
 	common.CoreLogger.Info("Creating window", w.data.title, w.data.width, w.data.height)
 
-	initGlfw()
+	window := Glad.NewOGLWindow(100, 100, "e",
+		Glad.CoreProfile(true),
+		Glad.Resizable(true),
+		Glad.ContextVersion(4, 5))
 
-	window, err := glfw.CreateWindow(w.data.width, w.data.height, w.data.title, nil, nil)
-	if err != nil {
-		common.CoreLogger.Fatal(err)
-	}
 	w.GlfwWindow = window
-	w.GlfwWindow.MakeContextCurrent()
 	w.GlfwWindow.SetUserPointer(unsafe.Pointer(w.data))
 
 	declareCallbacks(w)
-}
-
-func initGlfw() {
-	if !glfwInitialized {
-		if err := glfw.Init(); err != nil {
-			common.CoreLogger.Fatal(err)
-		}
-		common.CoreLogger.Info("GLFW initialized")
-		glfwInitialized = true
-	}
 }
 
 func Create(props *abstractWindow.Properties) *Window {
