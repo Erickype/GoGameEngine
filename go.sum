@@ -1,3 +1,5 @@
+github.com/AllenDang/cimgui-go v0.0.0-20230306042723-30acd7d694b1 h1:k9egrvYiq3yGxNheyKXLNZjsQlRzKI3x1lIBlmYqOrg=
+github.com/AllenDang/cimgui-go v0.0.0-20230306042723-30acd7d694b1/go.mod h1:vIyZDtr51WCmf1gWopQS4pAWdS5ma/PJ9Ypc1PbvLDE=
 github.com/go-gl/glfw/v3.3/glfw v0.0.0-20221017161538-93cebf72946b h1:GgabKamyOYguHqHjSkDACcgoPIz3w0Dis/zJ1wyHHHU=
 github.com/go-gl/glfw/v3.3/glfw v0.0.0-20221017161538-93cebf72946b/go.mod h1:tQ2UAYgL5IevRw8kRxooKSPJfGvJ9fJQFa0TUsXzTg8=
 github.com/gopherjs/gopherjs v0.0.0-20181017120253-0766667cb4d1 h1:EGx4pi6eqNxGaHF6qqu48+N2wcFQ5qg5FXgOdqsJ5d8=
