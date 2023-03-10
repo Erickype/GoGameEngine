@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/AllenDang/cimgui-go"
 	common "github.com/Erickype/GoGameEngine/Common"
-	"github.com/Erickype/GoGameEngine/Platform"
+	"github.com/Erickype/GoGameEngine/Internal/platforms"
 	abstractWindow "github.com/Erickype/GoGameEngine/Window"
 	"github.com/go-gl/glfw/v3.3/glfw"
 	"os"
@@ -66,7 +66,7 @@ func (w *Window) Init() {
 	defer context.Destroy()
 	io := imgui.CurrentIO()
 
-	p, err := Platform.NewGLFW(io, Platform.GLFWClientAPIOpenGL3)
+	p, err := platforms.NewGLFW(io, platforms.GLFWClientAPIOpenGL3)
 	if err != nil {
 		_, _ = fmt.Fprintf(os.Stderr, "%v\n", err)
 		os.Exit(-1)
