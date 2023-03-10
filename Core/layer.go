@@ -1,6 +1,8 @@
 package Core
 
-import "github.com/Erickype/GoGameEngine/Events"
+import (
+	"github.com/Erickype/GoGameEngine/API/Events"
+)
 
 type ILayer interface {
 	OnAttach()

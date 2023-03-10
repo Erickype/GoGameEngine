@@ -1,6 +1,8 @@
 package Window
 
-import "github.com/Erickype/GoGameEngine/Events"
+import (
+	"github.com/Erickype/GoGameEngine/API/Events"
+)
 
 type EventCallBackFn func(event *Events.IEvent)
 
