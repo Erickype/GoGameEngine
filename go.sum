@@ -1,12 +1,7 @@
-github.com/akiross/go-glad v0.0.0-20190627091720-134da500784b h1:XfFOYuy9jtjD01ehRKb1r39Ty1ZV9KDph1AmxY2fmQI=
-github.com/akiross/go-glad v0.0.0-20190627091720-134da500784b/go.mod h1:iGc9279Liv2xvZXgWHW8sAe1W4PMNAG5XL1lSyrJASM=
-github.com/fogleman/gg v1.3.0/go.mod h1:R/bRT+9gY/C5z7JzPU0zXsXHKM4/ayA+zqcVNZzPa1k=
-github.com/go-gl/gl v0.0.0-20190320180904-bf2b1f2f34d7 h1:SCYMcCJ89LjRGwEa0tRluNRiMjZHalQZrVrvTbPh+qw=
-github.com/go-gl/gl v0.0.0-20190320180904-bf2b1f2f34d7/go.mod h1:482civXOzJJCPzJ4ZOX/pwvXBWSnzD4OKMdH4ClKGbk=
-github.com/go-gl/glfw v0.0.0-20190409004039-e6da0acd62b1/go.mod h1:vR7hzQXu2zJy9AVAgeJqvqgH9Q5CA+iKCZ2gyEVpxRU=
-github.com/go-gl/glfw v0.0.0-20221017161538-93cebf72946b h1:2hdUMUOJuLQkhaPAwoyOeSzoaBydYEkXkBEuqDuDBfg=
-github.com/go-gl/glfw v0.0.0-20221017161538-93cebf72946b/go.mod h1:wyvWpaEu9B/VQiV1jsPs7Mha9I7yto/HqIBw197ZAzk=
-github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0/go.mod h1:E/TSTwGwJL78qG/PmXZO1EjYhfJinVAhrmmHX6Z8B9k=
+github.com/AllenDang/cimgui-go v0.0.0-20230306042723-30acd7d694b1 h1:k9egrvYiq3yGxNheyKXLNZjsQlRzKI3x1lIBlmYqOrg=
+github.com/AllenDang/cimgui-go v0.0.0-20230306042723-30acd7d694b1/go.mod h1:vIyZDtr51WCmf1gWopQS4pAWdS5ma/PJ9Ypc1PbvLDE=
+github.com/go-gl/glfw/v3.3/glfw v0.0.0-20221017161538-93cebf72946b h1:GgabKamyOYguHqHjSkDACcgoPIz3w0Dis/zJ1wyHHHU=
+github.com/go-gl/glfw/v3.3/glfw v0.0.0-20221017161538-93cebf72946b/go.mod h1:tQ2UAYgL5IevRw8kRxooKSPJfGvJ9fJQFa0TUsXzTg8=
 github.com/gopherjs/gopherjs v0.0.0-20181017120253-0766667cb4d1 h1:EGx4pi6eqNxGaHF6qqu48+N2wcFQ5qg5FXgOdqsJ5d8=
 github.com/gopherjs/gopherjs v0.0.0-20181017120253-0766667cb4d1/go.mod h1:wJfORRmW1u3UXTncJ5qlYoELFm8eSnnEO6hX4iZ3EWY=
 github.com/jtolds/gls v4.20.0+incompatible h1:xdiiI2gbIgH/gLH7ADydsJ1uDOEzR8yvV7C0MuV77Wo=
