@@ -11,8 +11,6 @@ import (
 	"unsafe"
 )
 
-var glfwInitialized = false
-
 type data struct {
 	title         string
 	width         int
@@ -74,19 +72,17 @@ func (w *Window) Init() {
 		os.Exit(-1)
 	}
 	w.GlfwWindow = p.GetWindow()
+
 	w.GlfwWindow.SetUserPointer(unsafe.Pointer(w.data))
 
 	declareCallbacks(w)
 }
 
-func initGlfw() {
-	if !glfwInitialized {
-		if err := glfw.Init(); err != nil {
-			common.CoreLogger.Fatal(err)
-		}
-		common.CoreLogger.Info("GLFW initialized")
-		glfwInitialized = true
-	}
+func initGlfw(w *Window) *glfw.Window {
+	return glad.NewOGLWindow(w.data.width, w.data.height, w.data.title,
+		glad.CoreProfile(true),
+		glad.Resizable(true),
+		glad.ContextVersion(4, 4))
 }
 
 func Create(props *abstractWindow.Properties) *Window {
