@@ -1,8 +1,8 @@
 package Windows
 
 import (
-	common "github.com/Erickype/GoGameEngine/Common"
-	"github.com/Erickype/GoGameEngine/Events"
+	common "github.com/Erickype/GoGameEngine/API/Common"
+	Events2 "github.com/Erickype/GoGameEngine/API/Events"
 	"github.com/go-gl/glfw/v3.3/glfw"
 )
 
@@ -21,9 +21,9 @@ func (w *Window) setSizeCallback() {
 		data.width = width
 		data.height = height
 
-		event := common.EventFactory.CreateEvent(Events.WindowResize)
+		event := common.EventFactory.CreateEvent(Events2.WindowResize)
 
-		if resizeEvent, ok := event.(*Events.WindowResizeEvent); ok {
+		if resizeEvent, ok := event.(*Events2.WindowResizeEvent); ok {
 			resizeEvent.Width = width
 			resizeEvent.Height = height
 		}
@@ -34,7 +34,7 @@ func (w *Window) setSizeCallback() {
 func (w *Window) setCloseCallback() {
 	w.GlfwWindow.SetCloseCallback(func(window *glfw.Window) {
 		data := (*data)(window.GetUserPointer())
-		event := common.EventFactory.CreateEvent(Events.WindowClose)
+		event := common.EventFactory.CreateEvent(Events2.WindowClose)
 		if data.eventCallback != nil {
 			(*data.eventCallback)(&event)
 		}
@@ -46,23 +46,23 @@ func (w *Window) setKeyCallback() {
 		data := (*data)(window.GetUserPointer())
 		switch action {
 		case glfw.Press:
-			event := common.EventFactory.CreateEvent(Events.KeyPressed)
-			if keyPressedEvent, ok := event.(*Events.KeyPressedEvent); ok {
+			event := common.EventFactory.CreateEvent(Events2.KeyPressed)
+			if keyPressedEvent, ok := event.(*Events2.KeyPressedEvent); ok {
 				keyPressedEvent.KeyCode = (int)(key)
 				keyPressedEvent.RepeatCount = 0
 			}
 			(*data.eventCallback)(&event)
 			break
 		case glfw.Release:
-			event := common.EventFactory.CreateEvent(Events.KeyReleased)
-			if keyPressedEvent, ok := event.(*Events.KeyReleasedEvent); ok {
+			event := common.EventFactory.CreateEvent(Events2.KeyReleased)
+			if keyPressedEvent, ok := event.(*Events2.KeyReleasedEvent); ok {
 				keyPressedEvent.KeyCode = (int)(key)
 			}
 			(*data.eventCallback)(&event)
 			break
 		case glfw.Repeat:
-			event := common.EventFactory.CreateEvent(Events.KeyPressed)
-			if keyPressedEvent, ok := event.(*Events.KeyPressedEvent); ok {
+			event := common.EventFactory.CreateEvent(Events2.KeyPressed)
+			if keyPressedEvent, ok := event.(*Events2.KeyPressedEvent); ok {
 				keyPressedEvent.KeyCode = (int)(key)
 				keyPressedEvent.RepeatCount = 1
 			}
@@ -77,15 +77,15 @@ func (w *Window) setMouseCallback() {
 		data := (*data)(window.GetUserPointer())
 		switch action {
 		case glfw.Press:
-			event := common.EventFactory.CreateEvent(Events.MouseButtonPressed)
-			if keyPressedEvent, ok := event.(*Events.MouseButtonPressedEvent); ok {
+			event := common.EventFactory.CreateEvent(Events2.MouseButtonPressed)
+			if keyPressedEvent, ok := event.(*Events2.MouseButtonPressedEvent); ok {
 				keyPressedEvent.Button = (int)(button)
 			}
 			(*data.eventCallback)(&event)
 			break
 		case glfw.Release:
-			event := common.EventFactory.CreateEvent(Events.MouseButtonReleased)
-			if keyPressedEvent, ok := event.(*Events.MouseButtonReleaseEvent); ok {
+			event := common.EventFactory.CreateEvent(Events2.MouseButtonReleased)
+			if keyPressedEvent, ok := event.(*Events2.MouseButtonReleaseEvent); ok {
 				keyPressedEvent.Button = (int)(button)
 			}
 			(*data.eventCallback)(&event)
@@ -97,8 +97,8 @@ func (w *Window) setMouseCallback() {
 func (w *Window) setScrollCallback() {
 	w.GlfwWindow.SetScrollCallback(func(window *glfw.Window, xOff float64, yOff float64) {
 		data := (*data)(window.GetUserPointer())
-		event := common.EventFactory.CreateEvent(Events.MouseScrolled)
-		if mouseScrolledEvent, ok := event.(*Events.MouseScrolledEvent); ok {
+		event := common.EventFactory.CreateEvent(Events2.MouseScrolled)
+		if mouseScrolledEvent, ok := event.(*Events2.MouseScrolledEvent); ok {
 			mouseScrolledEvent.XOffset = xOff
 			mouseScrolledEvent.YOffset = yOff
 		}
@@ -109,8 +109,8 @@ func (w *Window) setScrollCallback() {
 func (w *Window) setCursorPosCallback() {
 	w.GlfwWindow.SetCursorPosCallback(func(window *glfw.Window, xPos float64, yPos float64) {
 		data := (*data)(window.GetUserPointer())
-		event := common.EventFactory.CreateEvent(Events.MouseMoved)
-		if mouseMovedEvent, ok := event.(*Events.MouseMovedEvent); ok {
+		event := common.EventFactory.CreateEvent(Events2.MouseMoved)
+		if mouseMovedEvent, ok := event.(*Events2.MouseMovedEvent); ok {
 			mouseMovedEvent.MouseX = xPos
 			mouseMovedEvent.MouseY = yPos
 		}

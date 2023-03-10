@@ -3,9 +3,9 @@ package Windows
 import (
 	"fmt"
 	"github.com/AllenDang/cimgui-go"
-	common "github.com/Erickype/GoGameEngine/Common"
-	"github.com/Erickype/GoGameEngine/Internal/platforms"
-	abstractWindow "github.com/Erickype/GoGameEngine/Window"
+	common "github.com/Erickype/GoGameEngine/API/Common"
+	"github.com/Erickype/GoGameEngine/API/Internal/platforms"
+	abstractWindow "github.com/Erickype/GoGameEngine/API/Window"
 	"github.com/go-gl/glfw/v3.3/glfw"
 	"os"
 	"unsafe"

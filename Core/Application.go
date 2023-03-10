@@ -1,10 +1,10 @@
 package Core
 
 import (
-	common "github.com/Erickype/GoGameEngine/Common"
-	"github.com/Erickype/GoGameEngine/Events"
-	"github.com/Erickype/GoGameEngine/Platform/Windows"
-	"github.com/Erickype/GoGameEngine/Window"
+	"github.com/Erickype/GoGameEngine/API/Common"
+	"github.com/Erickype/GoGameEngine/API/Events"
+	"github.com/Erickype/GoGameEngine/API/Platform/Windows"
+	"github.com/Erickype/GoGameEngine/API/Window"
 )
 
 type IApplication interface {
@@ -38,7 +38,7 @@ func (a *Application) destroy() {
 }
 
 func (a *Application) init(layer *ILayer) {
-	common.CoreLogger.Info("Starting engine!!")
+	Common.CoreLogger.Info("Starting engine!!")
 	a.running = true
 	a.window = Windows.Create(&Window.Properties{
 		Title:  "GoGameEngine",
@@ -56,8 +56,8 @@ func (a *Application) init(layer *ILayer) {
 }
 
 func (a *Application) onEvent(event *Events.IEvent) {
-	common.EventDispatcher.Dispatch(*event)
-	common.CoreLogger.Trace((*event).ToString())
+	Common.EventDispatcher.Dispatch(*event)
+	Common.CoreLogger.Trace((*event).ToString())
 
 	if *a.layerStack.layerInsert != 0 {
 		for i := len(*a.layerStack.layers) - 1; i >= 0; i-- {

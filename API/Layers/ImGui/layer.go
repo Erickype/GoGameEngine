@@ -1,8 +1,8 @@
 package ImGui
 
 import (
+	"github.com/Erickype/GoGameEngine/API/Events"
 	"github.com/Erickype/GoGameEngine/Core"
-	"github.com/Erickype/GoGameEngine/Events"
 )
 
 type Layer struct {
