@@ -1,9 +1,11 @@
 package Windows
 
 import (
+	"fmt"
 	"github.com/AllenDang/cimgui-go"
 	common "github.com/Erickype/GoGameEngine/API/Common"
 	"github.com/Erickype/GoGameEngine/API/Internal/platforms"
+	"github.com/Erickype/GoGameEngine/API/Internal/renderers"
 	abstractWindow "github.com/Erickype/GoGameEngine/API/Window"
 	"github.com/go-gl/glfw/v3.3/glfw"
 	"os"
@@ -69,6 +71,13 @@ func (w *Window) Init() {
 	if err != nil {
 		common.CoreLogger.Fatal("Failing creating platform: ", os.Stderr)
 	}
+
+	renderer, err := renderers.NewOpenGL3(io)
+	if err != nil {
+		_, _ = fmt.Fprintf(os.Stderr, "%v\n", err)
+		os.Exit(-1)
+	}
+	defer renderer.Dispose()
 
 	w.GlfwWindow = p.GetWindow()
 	w.GlfwWindow.SetUserPointer(unsafe.Pointer(w.data))
