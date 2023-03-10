@@ -1,9 +1,13 @@
 package Windows
 
 import (
+	"fmt"
+	imgui "github.com/AllenDang/cimgui-go"
 	common "github.com/Erickype/GoGameEngine/Common"
+	"github.com/Erickype/GoGameEngine/Platform"
 	abstractWindow "github.com/Erickype/GoGameEngine/Window"
 	"github.com/go-gl/glfw/v3.3/glfw"
+	"os"
 	"unsafe"
 )
 
@@ -60,14 +64,16 @@ func (w *Window) Init() {
 
 	common.CoreLogger.Info("Creating window", w.data.title, w.data.width, w.data.height)
 
-	initGlfw()
+	context := imgui.CreateContext()
+	defer context.Destroy()
+	io := imgui.CurrentIO()
 
-	window, err := glfw.CreateWindow(w.data.width, w.data.height, w.data.title, nil, nil)
+	p, err := Platform.NewGLFW(io, Platform.GLFWClientAPIOpenGL3)
 	if err != nil {
-		common.CoreLogger.Fatal(err)
+		_, _ = fmt.Fprintf(os.Stderr, "%v\n", err)
+		os.Exit(-1)
 	}
-	w.GlfwWindow = window
-	w.GlfwWindow.MakeContextCurrent()
+	w.GlfwWindow = p.GetWindow()
 	w.GlfwWindow.SetUserPointer(unsafe.Pointer(w.data))
 
 	declareCallbacks(w)
