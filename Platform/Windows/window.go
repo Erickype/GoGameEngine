@@ -2,7 +2,7 @@ package Windows
 
 import (
 	"fmt"
-	imgui "github.com/AllenDang/cimgui-go"
+	"github.com/AllenDang/cimgui-go"
 	common "github.com/Erickype/GoGameEngine/Common"
 	"github.com/Erickype/GoGameEngine/Platform"
 	abstractWindow "github.com/Erickype/GoGameEngine/Window"
@@ -76,13 +76,6 @@ func (w *Window) Init() {
 	w.GlfwWindow.SetUserPointer(unsafe.Pointer(w.data))
 
 	declareCallbacks(w)
-}
-
-func initGlfw(w *Window) *glfw.Window {
-	return glad.NewOGLWindow(w.data.width, w.data.height, w.data.title,
-		glad.CoreProfile(true),
-		glad.Resizable(true),
-		glad.ContextVersion(4, 4))
 }
 
 func Create(props *abstractWindow.Properties) *Window {
