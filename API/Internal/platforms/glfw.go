@@ -2,7 +2,7 @@ package platforms
 
 import (
 	"fmt"
-	imgui "github.com/AllenDang/cimgui-go"
+	"github.com/AllenDang/cimgui-go"
 	"github.com/go-gl/glfw/v3.3/glfw"
 	"runtime"
 )
@@ -15,12 +15,10 @@ const (
 	GLFWClientAPIOpenGL3 GLFWClientAPI = "OpenGL3"
 )
 
-// GLFW implements a platform based on github.com/go-gl/glfw (v3.2).
+// GLFW implements a platform based on github.com/go-gl/glfw (v3.3).
 type GLFW struct {
-	imguiIO imgui.IO
-
-	window *glfw.Window
-
+	imGuiIO          imgui.IO
+	window           *glfw.Window
 	time             float64
 	mouseJustPressed [3]bool
 }
@@ -29,7 +27,7 @@ func (g *GLFW) GetWindow() *glfw.Window {
 	return g.window
 }
 
-func NewGLFW(io imgui.IO, clientAPI GLFWClientAPI) (*GLFW, error) {
+func NewGLFW(io imgui.IO, clientAPI GLFWClientAPI, width int, height int, title string) (*GLFW, error) {
 	runtime.LockOSThread()
 
 	err := glfw.Init()
@@ -51,7 +49,7 @@ func NewGLFW(io imgui.IO, clientAPI GLFWClientAPI) (*GLFW, error) {
 		return nil, err
 	}
 
-	window, err := glfw.CreateWindow(800, 600, "ImGui-Go GLFW+"+string(clientAPI)+" example", nil, nil)
+	window, err := glfw.CreateWindow(width, height, title, nil, nil)
 	if err != nil {
 		glfw.Terminate()
 		return nil, fmt.Errorf("failed to create window: %w", err)
@@ -60,7 +58,7 @@ func NewGLFW(io imgui.IO, clientAPI GLFWClientAPI) (*GLFW, error) {
 	glfw.SwapInterval(1)
 
 	platform := &GLFW{
-		imguiIO: io,
+		imGuiIO: io,
 		window:  window,
 	}
 

@@ -1,7 +1,6 @@
 package Windows
 
 import (
-	"fmt"
 	"github.com/AllenDang/cimgui-go"
 	common "github.com/Erickype/GoGameEngine/API/Common"
 	"github.com/Erickype/GoGameEngine/API/Internal/platforms"
@@ -66,13 +65,12 @@ func (w *Window) Init() {
 	defer context.Destroy()
 	io := imgui.CurrentIO()
 
-	p, err := platforms.NewGLFW(io, platforms.GLFWClientAPIOpenGL3)
+	p, err := platforms.NewGLFW(io, platforms.GLFWClientAPIOpenGL3, w.data.width, w.data.height, w.data.title)
 	if err != nil {
-		_, _ = fmt.Fprintf(os.Stderr, "%v\n", err)
-		os.Exit(-1)
+		common.CoreLogger.Fatal("Failing creating platform: ", os.Stderr)
 	}
-	w.GlfwWindow = p.GetWindow()
 
+	w.GlfwWindow = p.GetWindow()
 	w.GlfwWindow.SetUserPointer(unsafe.Pointer(w.data))
 
 	declareCallbacks(w)
