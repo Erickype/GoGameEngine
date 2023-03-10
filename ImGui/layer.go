@@ -23,3 +23,9 @@ func (l *Layer) OnUpdate() {
 func (l *Layer) OnEvent(_ *Events.IEvent) {
 
 }
+
+func New() *Layer {
+	layer := Layer{}
+	layer.Construct("ImGui")
+	return &layer
+}
