@@ -1,5 +1,6 @@
 package renderers
 
+import "C"
 import (
 	_ "embed" // using embed for the shader sources
 	"fmt"
@@ -74,10 +75,10 @@ func (renderer *OpenGL3) createDeviceObjects() {
 	renderer.fragHandle = gl.CreateShader(gl.FRAGMENT_SHADER)
 
 	glShaderSource := func(handle uint32, source string) {
-		csource, free := gl.Strs(source + "\x00")
+		cSource, free := gl.Strs(source + "\x00")
 		defer free()
 
-		gl.ShaderSource(handle, 1, csource, nil)
+		gl.ShaderSource(handle, 1, cSource, nil)
 	}
 
 	glShaderSource(renderer.vertHandle, vertexShader)
@@ -97,10 +98,34 @@ func (renderer *OpenGL3) createDeviceObjects() {
 	gl.GenBuffers(1, &renderer.vboHandle)
 	gl.GenBuffers(1, &renderer.elementsHandle)
 
-	//renderer.createFontsTexture()
+	renderer.createFontsTexture()
 
 	// Restore modified GL state
 	gl.BindTexture(gl.TEXTURE_2D, uint32(lastTexture))
 	gl.BindBuffer(gl.ARRAY_BUFFER, uint32(lastArrayBuffer))
 	gl.BindVertexArray(uint32(lastVertexArray))
+}
+
+func (renderer *OpenGL3) createFontsTexture() {
+	// Build texture atlas
+	io := imgui.CurrentIO()
+	pixels, width, height, _ := io.Fonts().GetTextureDataAsAlpha8()
+
+	// Upload texture to graphics system
+	var lastTexture int32
+	gl.GetIntegerv(gl.TEXTURE_BINDING_2D, &lastTexture)
+	gl.GenTextures(1, &renderer.fontTexture)
+	gl.BindTexture(gl.TEXTURE_2D, renderer.fontTexture)
+	gl.TexParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR)
+	gl.TexParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR)
+	gl.PixelStorei(gl.UNPACK_ROW_LENGTH, 0)
+	gl.TexImage2D(gl.TEXTURE_2D, 0, gl.RED, width, height,
+		0, gl.RED, gl.UNSIGNED_BYTE, pixels)
+
+	// Store our identifier
+	var texID = uintptr(renderer.fontTexture)
+	io.Fonts().SetTexID(imgui.TextureID(texID))
+
+	// Restore state
+	gl.BindTexture(gl.TEXTURE_2D, uint32(lastTexture))
 }
