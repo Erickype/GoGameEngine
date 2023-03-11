@@ -1,6 +1,5 @@
 package renderers
 
-import "C"
 import (
 	_ "embed" // using embed for the shader sources
 	"fmt"
@@ -54,7 +53,7 @@ func NewOpenGL3(io imgui.IO) (*OpenGL3, error) {
 
 // Dispose cleans up the resources.
 func (renderer *OpenGL3) Dispose() {
-	//renderer.invalidateDeviceObjects()
+	renderer.invalidateDeviceObjects()
 }
 
 func (renderer *OpenGL3) createDeviceObjects() {
@@ -128,4 +127,43 @@ func (renderer *OpenGL3) createFontsTexture() {
 
 	// Restore state
 	gl.BindTexture(gl.TEXTURE_2D, uint32(lastTexture))
+}
+
+func (renderer *OpenGL3) invalidateDeviceObjects() {
+	if renderer.vboHandle != 0 {
+		gl.DeleteBuffers(1, &renderer.vboHandle)
+	}
+	renderer.vboHandle = 0
+	if renderer.elementsHandle != 0 {
+		gl.DeleteBuffers(1, &renderer.elementsHandle)
+	}
+	renderer.elementsHandle = 0
+
+	if (renderer.shaderHandle != 0) && (renderer.vertHandle != 0) {
+		gl.DetachShader(renderer.shaderHandle, renderer.vertHandle)
+	}
+	if renderer.vertHandle != 0 {
+		gl.DeleteShader(renderer.vertHandle)
+	}
+	renderer.vertHandle = 0
+
+	if (renderer.shaderHandle != 0) && (renderer.fragHandle != 0) {
+		gl.DetachShader(renderer.shaderHandle, renderer.fragHandle)
+	}
+	if renderer.fragHandle != 0 {
+		gl.DeleteShader(renderer.fragHandle)
+	}
+	renderer.fragHandle = 0
+
+	if renderer.shaderHandle != 0 {
+		gl.DeleteProgram(renderer.shaderHandle)
+	}
+	renderer.shaderHandle = 0
+
+	if renderer.fontTexture != 0 {
+		gl.DeleteTextures(1, &renderer.fontTexture)
+
+		imgui.CurrentIO().Fonts().SetTexID(imgui.TextureID(uintptr(0)))
+		renderer.fontTexture = 0
+	}
 }
