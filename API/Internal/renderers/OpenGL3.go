@@ -51,6 +51,11 @@ func NewOpenGL3(io imgui.IO) (*OpenGL3, error) {
 	return renderer, nil
 }
 
+func (renderer *OpenGL3) PreRender(clearColor [3]float32) {
+	gl.ClearColor(clearColor[0], clearColor[1], clearColor[2], 1.0)
+	gl.Clear(gl.COLOR_BUFFER_BIT)
+}
+
 // Dispose cleans up the resources.
 func (renderer *OpenGL3) Dispose() {
 	renderer.invalidateDeviceObjects()
