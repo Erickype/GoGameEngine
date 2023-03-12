@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/AllenDang/cimgui-go"
 	common "github.com/Erickype/GoGameEngine/API/Common"
+	"github.com/Erickype/GoGameEngine/API/Internal/Implementations"
 	"github.com/Erickype/GoGameEngine/API/Internal/platforms"
 	"github.com/Erickype/GoGameEngine/API/Internal/renderers"
 	abstractWindow "github.com/Erickype/GoGameEngine/API/Window"
@@ -78,6 +79,8 @@ func (w *Window) Init() {
 		os.Exit(-1)
 	}
 	defer renderer.Dispose()
+
+	Implementations.Run(p, renderer)
 
 	w.GlfwWindow = p.GetWindow()
 	w.GlfwWindow.SetUserPointer(unsafe.Pointer(w.data))
