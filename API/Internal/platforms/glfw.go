@@ -127,7 +127,27 @@ func (g *GLFW) PostRender() {
 }
 
 func (g *GLFW) setKeyMapping() {
-
+	g.imGuiIO.SetKeyEventNativeData(imgui.KeyTab, int32(glfw.KeyTab), int32(glfw.GetKeyScancode(glfw.KeyTab)))
+	g.imGuiIO.SetKeyEventNativeData(imgui.KeyLeftArrow, int32(glfw.KeyLeft), int32(glfw.GetKeyScancode(glfw.KeyLeft)))
+	g.imGuiIO.SetKeyEventNativeData(imgui.KeyRightArrow, int32(glfw.KeyRight), int32(glfw.GetKeyScancode(glfw.KeyRight)))
+	g.imGuiIO.SetKeyEventNativeData(imgui.KeyUpArrow, int32(glfw.KeyUp), int32(glfw.GetKeyScancode(glfw.KeyUp)))
+	g.imGuiIO.SetKeyEventNativeData(imgui.KeyDownArrow, int32(glfw.KeyDown), int32(glfw.GetKeyScancode(glfw.KeyDown)))
+	g.imGuiIO.SetKeyEventNativeData(imgui.KeyPageDown, int32(glfw.KeyPageDown), int32(glfw.GetKeyScancode(glfw.KeyPageDown)))
+	g.imGuiIO.SetKeyEventNativeData(imgui.KeyPageUp, int32(glfw.KeyPageUp), int32(glfw.GetKeyScancode(glfw.KeyPageUp)))
+	g.imGuiIO.SetKeyEventNativeData(imgui.KeyHome, int32(glfw.KeyHome), int32(glfw.GetKeyScancode(glfw.KeyHome)))
+	g.imGuiIO.SetKeyEventNativeData(imgui.KeyEnd, int32(glfw.KeyEnd), int32(glfw.GetKeyScancode(glfw.KeyEnd)))
+	g.imGuiIO.SetKeyEventNativeData(imgui.KeyInsert, int32(glfw.KeyInsert), int32(glfw.GetKeyScancode(glfw.KeyInsert)))
+	g.imGuiIO.SetKeyEventNativeData(imgui.KeyDelete, int32(glfw.KeyDelete), int32(glfw.GetKeyScancode(glfw.KeyDelete)))
+	g.imGuiIO.SetKeyEventNativeData(imgui.KeyBackspace, int32(glfw.KeyBackspace), int32(glfw.GetKeyScancode(glfw.KeyBackspace)))
+	g.imGuiIO.SetKeyEventNativeData(imgui.KeySpace, int32(glfw.KeySpace), int32(glfw.GetKeyScancode(glfw.KeySpace)))
+	g.imGuiIO.SetKeyEventNativeData(imgui.KeyEnter, int32(glfw.KeyEnter), int32(glfw.GetKeyScancode(glfw.KeyEnter)))
+	g.imGuiIO.SetKeyEventNativeData(imgui.KeyEscape, int32(glfw.KeyEscape), int32(glfw.GetKeyScancode(glfw.KeyEscape)))
+	g.imGuiIO.SetKeyEventNativeData(imgui.KeyA, int32(glfw.KeyA), int32(glfw.GetKeyScancode(glfw.KeyA)))
+	g.imGuiIO.SetKeyEventNativeData(imgui.KeyC, int32(glfw.KeyC), int32(glfw.GetKeyScancode(glfw.KeyC)))
+	g.imGuiIO.SetKeyEventNativeData(imgui.KeyV, int32(glfw.KeyV), int32(glfw.GetKeyScancode(glfw.KeyV)))
+	g.imGuiIO.SetKeyEventNativeData(imgui.KeyX, int32(glfw.KeyX), int32(glfw.GetKeyScancode(glfw.KeyX)))
+	g.imGuiIO.SetKeyEventNativeData(imgui.KeyY, int32(glfw.KeyY), int32(glfw.GetKeyScancode(glfw.KeyY)))
+	g.imGuiIO.SetKeyEventNativeData(imgui.KeyZ, int32(glfw.KeyZ), int32(glfw.GetKeyScancode(glfw.KeyZ)))
 }
 
 func (g *GLFW) installCallbacks() {
