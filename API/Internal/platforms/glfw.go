@@ -184,8 +184,13 @@ func (g *GLFW) mouseScrollChange(_ *glfw.Window, x, y float64) {
 	g.imGuiIO.AddMouseWheelDelta(float32(x), float32(y))
 }
 
-func (g *GLFW) keyChange(_ *glfw.Window, _ glfw.Key, _ int, _ glfw.Action, _ glfw.ModifierKey) {
-
+func (g *GLFW) keyChange(_ *glfw.Window, key glfw.Key, _ int, action glfw.Action, _ glfw.ModifierKey) {
+	if action == glfw.Press {
+		g.imGuiIO.AddKeyEvent(imgui.Key(key), true)
+	}
+	if action == glfw.Release {
+		g.imGuiIO.AddKeyEvent(imgui.Key(key), true)
+	}
 }
 
 func (g *GLFW) charChange(_ *glfw.Window, char rune) {
