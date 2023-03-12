@@ -157,9 +157,17 @@ func (g *GLFW) installCallbacks() {
 	g.window.SetCharCallback(g.charChange)
 }
 
-var glfwButtonIndexByID = map[glfw.MouseButton]int{}
+var glfwButtonIndexByID = map[glfw.MouseButton]int{
+	glfw.MouseButton1: mouseButtonPrimary,
+	glfw.MouseButton2: mouseButtonSecondary,
+	glfw.MouseButton3: mouseButtonTertiary,
+}
 
-var glfwButtonIDByIndex = map[int]glfw.MouseButton{}
+var glfwButtonIDByIndex = map[int]glfw.MouseButton{
+	mouseButtonPrimary:   glfw.MouseButton1,
+	mouseButtonSecondary: glfw.MouseButton2,
+	mouseButtonTertiary:  glfw.MouseButton3,
+}
 
 func (g *GLFW) mouseButtonChange(_ *glfw.Window, rawButton glfw.MouseButton, action glfw.Action, _ glfw.ModifierKey) {
 	buttonIndex, known := glfwButtonIndexByID[rawButton]
