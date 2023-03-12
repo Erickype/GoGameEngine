@@ -1,4 +1,4 @@
-package Platform
+package Internal
 
 import "github.com/AllenDang/cimgui-go"
 
