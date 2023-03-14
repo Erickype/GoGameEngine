@@ -6,6 +6,7 @@ import (
 	"github.com/go-gl/glfw/v3.3/glfw"
 	"math"
 	"runtime"
+	"unsafe"
 )
 
 type GLFWClientAPI string
@@ -22,6 +23,10 @@ type GLFW struct {
 	window           *glfw.Window
 	time             float64
 	mouseJustPressed [3]bool
+}
+
+func (g *GLFW) SetUserPointer(pointer unsafe.Pointer) {
+	g.window.SetUserPointer(pointer)
 }
 
 func (g *GLFW) GetWindow() *glfw.Window {
