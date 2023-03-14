@@ -3,6 +3,7 @@ package Core
 import (
 	"github.com/Erickype/GoGameEngine/API/Common"
 	"github.com/Erickype/GoGameEngine/API/Events"
+	"github.com/Erickype/GoGameEngine/API/Internal"
 	"github.com/Erickype/GoGameEngine/API/Platform/Windows"
 	"github.com/Erickype/GoGameEngine/API/Window"
 )
@@ -14,7 +15,11 @@ type IApplication interface {
 	onEvent(event *Events.IEvent)
 	PushLayer(layer *ILayer)
 	PushOverlay(overlay *ILayer)
+	GetPlatform(platform *Internal.IPlatform)
+	GetRenderer(platform *Internal.IRenderer)
 }
+
+var ApplicationInstance *Application
 
 type Application struct {
 	window     *Windows.Window
@@ -23,7 +28,7 @@ type Application struct {
 }
 
 func (a *Application) run() {
-	for !a.window.GlfwWindow.ShouldClose() {
+	for !a.window.Platform.ShouldStop() {
 		if *a.layerStack.layerInsert != 0 {
 			for _, layer := range *a.layerStack.layers {
 				(*layer).OnUpdate()
@@ -35,6 +40,7 @@ func (a *Application) run() {
 
 func (a *Application) destroy() {
 	a.running = false
+	a.window.Shutdown()
 }
 
 func (a *Application) init(layer *ILayer) {
@@ -72,6 +78,7 @@ func (a *Application) onEvent(event *Events.IEvent) {
 }
 
 func (a *Application) PushLayer(layer *ILayer) {
+	(*layer).OnAttach()
 	a.layerStack.PushLayer(layer)
 }
 
@@ -79,9 +86,18 @@ func (a *Application) PushOverlay(overlay *ILayer) {
 	a.layerStack.PushOverlay(overlay)
 }
 
+func (a *Application) GetPlatform() Internal.IPlatform {
+	return a.window.Platform
+}
+
+func (a *Application) GetRenderer() Internal.IRenderer {
+	return a.window.Renderer
+}
+
 // CreateApplication This is the entry point to create an application
 func CreateApplication(layer *ILayer) {
 	application := &Application{}
+	ApplicationInstance = application
 	application.init(layer)
 	application.run()
 	application.destroy()
