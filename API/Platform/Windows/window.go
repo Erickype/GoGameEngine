@@ -1,11 +1,12 @@
 package Windows
 
 import (
-	"fmt"
 	"github.com/AllenDang/cimgui-go"
-	common "github.com/Erickype/GoGameEngine/Common"
-	"github.com/Erickype/GoGameEngine/Platform"
-	abstractWindow "github.com/Erickype/GoGameEngine/Window"
+	common "github.com/Erickype/GoGameEngine/API/Common"
+	"github.com/Erickype/GoGameEngine/API/Internal"
+	"github.com/Erickype/GoGameEngine/API/Internal/platforms"
+	"github.com/Erickype/GoGameEngine/API/Internal/renderers"
+	abstractWindow "github.com/Erickype/GoGameEngine/API/Window"
 	"github.com/go-gl/glfw/v3.3/glfw"
 	"os"
 	"unsafe"
@@ -20,8 +21,9 @@ type data struct {
 }
 
 type Window struct {
-	GlfwWindow *glfw.Window
-	data       *data
+	data     *data
+	Platform Internal.IPlatform
+	Renderer Internal.IRenderer
 }
 
 func (w *Window) GetWidth() int {
@@ -50,30 +52,36 @@ func (w *Window) IsVSync() bool {
 }
 
 func (w *Window) OnUpdate() {
-	w.GlfwWindow.SwapBuffers()
-	glfw.PollEvents()
+	w.Platform.PostRender()
+	w.Platform.ProcessEvents()
 }
 
 func (w *Window) Shutdown() {
-	w.GlfwWindow.Destroy()
+	w.Platform.(*platforms.GLFW).Dispose()
+	w.Renderer.(*renderers.OpenGL3).Dispose()
 }
 
 func (w *Window) Init() {
 
 	common.CoreLogger.Info("Creating window", w.data.title, w.data.width, w.data.height)
 
-	context := imgui.CreateContext()
-	defer context.Destroy()
+	//This creates the imGui context and IO for platform creation
+	imgui.CreateContext()
 	io := imgui.CurrentIO()
 
-	p, err := Platform.NewGLFW(io, Platform.GLFWClientAPIOpenGL3)
+	platform, err := platforms.NewGLFW(io, platforms.GLFWClientAPIOpenGL3, w.data.width, w.data.height, w.data.title)
 	if err != nil {
-		_, _ = fmt.Fprintf(os.Stderr, "%v\n", err)
-		os.Exit(-1)
+		common.CoreLogger.Fatal("Failing creating platform: ", os.Stderr)
 	}
-	w.GlfwWindow = p.GetWindow()
+	w.Platform = platform
 
-	w.GlfwWindow.SetUserPointer(unsafe.Pointer(w.data))
+	renderer, err := renderers.NewOpenGL3(io)
+	if err != nil {
+		common.CoreLogger.Fatal("Failing creating renderer: ", os.Stderr)
+	}
+	w.Renderer = renderer
+
+	w.Platform.(*platforms.GLFW).SetUserPointer(unsafe.Pointer(w.data))
 
 	declareCallbacks(w)
 }

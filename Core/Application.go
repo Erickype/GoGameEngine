@@ -1,10 +1,11 @@
 package Core
 
 import (
-	common "github.com/Erickype/GoGameEngine/Common"
-	"github.com/Erickype/GoGameEngine/Events"
-	"github.com/Erickype/GoGameEngine/Platform/Windows"
-	"github.com/Erickype/GoGameEngine/Window"
+	"github.com/Erickype/GoGameEngine/API/Common"
+	"github.com/Erickype/GoGameEngine/API/Events"
+	"github.com/Erickype/GoGameEngine/API/Internal"
+	"github.com/Erickype/GoGameEngine/API/Platform/Windows"
+	"github.com/Erickype/GoGameEngine/API/Window"
 )
 
 type IApplication interface {
@@ -14,7 +15,11 @@ type IApplication interface {
 	onEvent(event *Events.IEvent)
 	PushLayer(layer *ILayer)
 	PushOverlay(overlay *ILayer)
+	GetPlatform(platform *Internal.IPlatform)
+	GetRenderer(platform *Internal.IRenderer)
 }
+
+var ApplicationInstance *Application
 
 type Application struct {
 	window     *Windows.Window
@@ -23,7 +28,7 @@ type Application struct {
 }
 
 func (a *Application) run() {
-	for !a.window.GlfwWindow.ShouldClose() {
+	for !a.window.Platform.ShouldStop() {
 		if *a.layerStack.layerInsert != 0 {
 			for _, layer := range *a.layerStack.layers {
 				(*layer).OnUpdate()
@@ -35,10 +40,11 @@ func (a *Application) run() {
 
 func (a *Application) destroy() {
 	a.running = false
+	a.window.Shutdown()
 }
 
 func (a *Application) init(layer *ILayer) {
-	common.CoreLogger.Info("Starting engine!!")
+	Common.CoreLogger.Info("Starting engine!!")
 	a.running = true
 	a.window = Windows.Create(&Window.Properties{
 		Title:  "GoGameEngine",
@@ -56,8 +62,8 @@ func (a *Application) init(layer *ILayer) {
 }
 
 func (a *Application) onEvent(event *Events.IEvent) {
-	common.EventDispatcher.Dispatch(*event)
-	common.CoreLogger.Trace((*event).ToString())
+	Common.EventDispatcher.Dispatch(*event)
+	Common.CoreLogger.Trace((*event).ToString())
 
 	if *a.layerStack.layerInsert != 0 {
 		for i := len(*a.layerStack.layers) - 1; i >= 0; i-- {
@@ -72,6 +78,7 @@ func (a *Application) onEvent(event *Events.IEvent) {
 }
 
 func (a *Application) PushLayer(layer *ILayer) {
+	(*layer).OnAttach()
 	a.layerStack.PushLayer(layer)
 }
 
@@ -79,9 +86,18 @@ func (a *Application) PushOverlay(overlay *ILayer) {
 	a.layerStack.PushOverlay(overlay)
 }
 
+func (a *Application) GetPlatform() Internal.IPlatform {
+	return a.window.Platform
+}
+
+func (a *Application) GetRenderer() Internal.IRenderer {
+	return a.window.Renderer
+}
+
 // CreateApplication This is the entry point to create an application
 func CreateApplication(layer *ILayer) {
 	application := &Application{}
+	ApplicationInstance = application
 	application.init(layer)
 	application.run()
 	application.destroy()
