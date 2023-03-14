@@ -1,10 +1,9 @@
 package Windows
 
 import (
-	"fmt"
 	"github.com/AllenDang/cimgui-go"
 	common "github.com/Erickype/GoGameEngine/API/Common"
-	"github.com/Erickype/GoGameEngine/API/Internal/Implementations"
+	"github.com/Erickype/GoGameEngine/API/Internal"
 	"github.com/Erickype/GoGameEngine/API/Internal/platforms"
 	"github.com/Erickype/GoGameEngine/API/Internal/renderers"
 	abstractWindow "github.com/Erickype/GoGameEngine/API/Window"
@@ -22,8 +21,9 @@ type data struct {
 }
 
 type Window struct {
-	GlfwWindow *glfw.Window
-	data       *data
+	data     *data
+	Platform Internal.IPlatform
+	Renderer Internal.IRenderer
 }
 
 func (w *Window) GetWidth() int {
@@ -52,38 +52,36 @@ func (w *Window) IsVSync() bool {
 }
 
 func (w *Window) OnUpdate() {
-	w.GlfwWindow.SwapBuffers()
-	glfw.PollEvents()
+	w.Platform.PostRender()
+	w.Platform.ProcessEvents()
 }
 
 func (w *Window) Shutdown() {
-	w.GlfwWindow.Destroy()
+	w.Platform.(*platforms.GLFW).Dispose()
+	w.Renderer.(*renderers.OpenGL3).Dispose()
 }
 
 func (w *Window) Init() {
 
 	common.CoreLogger.Info("Creating window", w.data.title, w.data.width, w.data.height)
 
-	context := imgui.CreateContext()
-	defer context.Destroy()
+	//This creates the imGui context and IO for platform creation
+	imgui.CreateContext()
 	io := imgui.CurrentIO()
 
-	p, err := platforms.NewGLFW(io, platforms.GLFWClientAPIOpenGL3, w.data.width, w.data.height, w.data.title)
+	platform, err := platforms.NewGLFW(io, platforms.GLFWClientAPIOpenGL3, w.data.width, w.data.height, w.data.title)
 	if err != nil {
 		common.CoreLogger.Fatal("Failing creating platform: ", os.Stderr)
 	}
+	w.Platform = platform
 
 	renderer, err := renderers.NewOpenGL3(io)
 	if err != nil {
-		_, _ = fmt.Fprintf(os.Stderr, "%v\n", err)
-		os.Exit(-1)
+		common.CoreLogger.Fatal("Failing creating renderer: ", os.Stderr)
 	}
-	defer renderer.Dispose()
+	w.Renderer = renderer
 
-	Implementations.Run(p, renderer)
-
-	w.GlfwWindow = p.GetWindow()
-	w.GlfwWindow.SetUserPointer(unsafe.Pointer(w.data))
+	w.Platform.(*platforms.GLFW).SetUserPointer(unsafe.Pointer(w.data))
 
 	declareCallbacks(w)
 }
