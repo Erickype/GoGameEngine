@@ -5,12 +5,7 @@ import (
 )
 
 var EventFactory *Events2.EventFactory
-var EventDispatcher *Events2.EventDispatcher
 
 func initEventsFactory() {
 	EventFactory = Events2.GetEventFactoryInstance()
-}
-
-func initEventDispatcher() {
-	EventDispatcher = Events2.GetEventDispatcherInstance()
 }

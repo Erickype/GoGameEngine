@@ -62,7 +62,6 @@ func (a *Application) init(layer *ILayer) {
 }
 
 func (a *Application) onEvent(event *Events.IEvent) {
-	Common.EventDispatcher.Dispatch(*event)
 	Common.CoreLogger.Trace((*event).ToString())
 
 	if *a.layerStack.layerInsert != 0 {
