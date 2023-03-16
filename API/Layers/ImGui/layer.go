@@ -35,6 +35,10 @@ func (l *Layer) OnEvent(_ *Events.IEvent) {
 
 }
 
+func (l *Layer) OnMouseButtonPressedEvent(event *Events.MouseButtonPressedEvent) bool {
+	return false
+}
+
 func NewImGui() *Layer {
 	layer := Layer{}
 	layer.Construct("ImGui")

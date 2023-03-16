@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/AllenDang/cimgui-go"
 	"github.com/go-gl/glfw/v3.3/glfw"
-	"math"
 	"runtime"
 	"unsafe"
 )
@@ -68,9 +67,6 @@ func NewGLFW(io imgui.IO, clientAPI GLFWClientAPI, width int, height int, title 
 		window:  window,
 	}
 
-	platform.setKeyMapping()
-	platform.installCallbacks()
-
 	return platform, nil
 }
 
@@ -113,20 +109,6 @@ func (g *GLFW) NewFrame() {
 		g.imGuiIO.SetDeltaTime(float32(currentTime - g.time))
 	}
 	g.time = currentTime
-
-	// Setup inputs
-	if g.window.GetAttrib(glfw.Focused) != 0 {
-		x, y := g.window.GetCursorPos()
-		g.imGuiIO.SetMousePos(imgui.Vec2{X: float32(x), Y: float32(y)})
-	} else {
-		g.imGuiIO.SetMousePos(imgui.Vec2{X: -math.MaxFloat32, Y: -math.MaxFloat32})
-	}
-
-	for i := 0; i < len(g.mouseJustPressed); i++ {
-		down := g.mouseJustPressed[i] || (g.window.GetMouseButton(glfwButtonIDByIndex[i]) == glfw.Press)
-		g.imGuiIO.SetMouseButtonDown(i, down)
-		g.mouseJustPressed[i] = false
-	}
 }
 
 // PostRender performs a buffer swap.
