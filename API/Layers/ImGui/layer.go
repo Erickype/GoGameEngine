@@ -29,7 +29,10 @@ func (l *Layer) OnUpdate() {
 
 	imgui.Render()
 	Core.ApplicationInstance.GetRenderer().PreRender(clearColor)
-	Core.ApplicationInstance.GetRenderer().Render(Core.ApplicationInstance.GetPlatform().DisplaySize(), Core.ApplicationInstance.GetPlatform().FramebufferSize(), imgui.CurrentDrawData())
+	Core.ApplicationInstance.GetRenderer().Render(
+		Core.ApplicationInstance.GetPlatform().DisplaySize(),
+		Core.ApplicationInstance.GetPlatform().FramebufferSize(),
+		imgui.CurrentDrawData())
 }
 
 func (l *Layer) OnEvent(event *Events.IEvent) {
