@@ -1,48 +1,24 @@
 package Events
 
-var dispatcherInstance *EventDispatcher
+import (
+	"reflect"
+)
 
-func init() {
-	dispatcherInstance = &EventDispatcher{}
+type EventDispatcher struct {
+	event *IEvent
 }
 
-type IEventDispatcher interface {
-	Dispatch(event IEvent) bool
-}
+func (d *EventDispatcher) Dispatch(fn interface{}) bool {
+	argumentType := reflect.TypeOf(fn).In(0)
 
-type EventDispatcher struct{}
-
-func GetEventDispatcherInstance() *EventDispatcher {
-	return dispatcherInstance
-}
-
-func (d *EventDispatcher) Dispatch(event IEvent) bool {
-	response := false
-	switch event := event.(type) {
-	case *MouseMovedEvent:
-		event.handled = true
-		response = event.handled
-	case *MouseScrolledEvent:
-		event.handled = true
-		response = event.handled
-	case *MouseButtonPressedEvent:
-		event.handled = true
-		response = event.handled
-	case *MouseButtonReleaseEvent:
-		event.handled = true
-		response = event.handled
-	case *KeyPressedEvent:
-		event.handled = true
-		response = event.handled
-	case *KeyReleasedEvent:
-		event.handled = true
-		response = event.handled
-	case *WindowResizeEvent:
-		event.handled = true
-		response = event.handled
-	case *WindowCloseEvent:
-		event.handled = true
-		response = event.handled
+	if reflect.TypeOf(*d.event).AssignableTo(argumentType) {
+		(*d.event).SetHandled(reflect.ValueOf(fn).Call([]reflect.Value{reflect.ValueOf(*d.event)})[0].Bool())
+		return true
 	}
-	return response
+	return false
+}
+
+func CreateDispatcher(event *IEvent) *EventDispatcher {
+	dispatcher := &EventDispatcher{event: event}
+	return dispatcher
 }
