@@ -2,7 +2,6 @@ package Layers
 
 import (
 	"github.com/AllenDang/cimgui-go"
-	"github.com/Erickype/GoGameEngine/API/Common"
 	"github.com/Erickype/GoGameEngine/API/Events"
 	"github.com/Erickype/GoGameEngine/API/Internal/renderers/gl/v3.2-core/gl"
 	"github.com/Erickype/GoGameEngine/Core"
@@ -45,6 +44,7 @@ func (l *Layer) OnEvent(event *Events.IEvent) {
 	dispatcher.Dispatch(l.OnMouseScrolledEvent)
 	dispatcher.Dispatch(l.OnKeyPressedEvent)
 	dispatcher.Dispatch(l.OnKeyReleasedEvent)
+	dispatcher.Dispatch(l.OnKeyTypedEvent)
 	dispatcher.Dispatch(l.OnWindowResizeEvent)
 }
 
@@ -78,14 +78,28 @@ func (l *Layer) OnMouseScrolledEvent(event *Events.MouseScrolledEvent) bool {
 }
 
 func (l *Layer) OnKeyPressedEvent(event *Events.KeyPressedEvent) bool {
-	Common.CoreLogger.Debug("OnKeyPressedEvent: ", event)
+	io := imgui.CurrentIO()
+	io.AddKeyEvent(imgui.Key(event.GetKeyCode()), true)
+
+	io.SetKeyCtrl(io.KeyCtrl())
+	io.SetKeySuper(io.KeySuper())
+	io.SetKeyAlt(io.KeyAlt())
+	io.SetKeyShift(io.KeyShift())
 	return false
 }
 
 func (l *Layer) OnKeyReleasedEvent(event *Events.KeyReleasedEvent) bool {
-	Common.CoreLogger.Debug("OnKeyReleasedEvent: ", event)
+	io := imgui.CurrentIO()
+	io.AddKeyEvent(imgui.Key(event.GetKeyCode()), false)
 	return false
 }
+
+func (l *Layer) OnKeyTypedEvent(event *Events.KeyTypedEvent) bool {
+	io := imgui.CurrentIO()
+	io.AddInputCharacter(uint32(event.GetKeyCode()))
+	return false
+}
+
 func (l *Layer) OnWindowResizeEvent(event *Events.WindowResizeEvent) bool {
 	io := imgui.CurrentIO()
 	io.SetDisplaySize(imgui.NewVec2(float32(event.GetWidth()), float32(event.GetHeight())))
