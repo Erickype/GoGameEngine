@@ -16,6 +16,7 @@ const (
 	AppRender
 	KeyPressed
 	KeyReleased
+	KeyTyped
 	MouseButtonPressed
 	MouseButtonReleased
 	MouseMoved
@@ -94,6 +95,7 @@ type IEvent interface {
 	IsInCategory() bool
 	ToString() string
 	WasHandled() bool
+	SetHandled(flag bool)
 	Init()
 }
 
@@ -122,6 +124,10 @@ func (e *Event) IsInCategory() bool {
 
 func (e *Event) WasHandled() bool {
 	return e.handled
+}
+
+func (e *Event) SetHandled(flag bool) {
+	e.handled = flag
 }
 
 func (e *Event) ToString() string {

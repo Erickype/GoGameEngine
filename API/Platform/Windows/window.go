@@ -1,13 +1,13 @@
 package Windows
 
 import (
-	"github.com/AllenDang/cimgui-go"
 	common "github.com/Erickype/GoGameEngine/API/Common"
 	"github.com/Erickype/GoGameEngine/API/Internal"
 	"github.com/Erickype/GoGameEngine/API/Internal/platforms"
 	"github.com/Erickype/GoGameEngine/API/Internal/renderers"
 	abstractWindow "github.com/Erickype/GoGameEngine/API/Window"
 	"github.com/go-gl/glfw/v3.3/glfw"
+	"github.com/inkyblackness/imgui-go/v4"
 	"os"
 	"unsafe"
 )
@@ -66,7 +66,7 @@ func (w *Window) Init() {
 	common.CoreLogger.Info("Creating window", w.data.title, w.data.width, w.data.height)
 
 	//This creates the imGui context and IO for platform creation
-	imgui.CreateContext()
+	imgui.CreateContext(nil)
 	io := imgui.CurrentIO()
 
 	platform, err := platforms.NewGLFW(io, platforms.GLFWClientAPIOpenGL3, w.data.width, w.data.height, w.data.title)

@@ -1,98 +1,115 @@
 package Layers
 
 import (
-	"fmt"
-	"github.com/AllenDang/cimgui-go"
 	"github.com/Erickype/GoGameEngine/API/Events"
+	"github.com/Erickype/GoGameEngine/API/Internal/renderers/gl/v3.2-core/gl"
 	"github.com/Erickype/GoGameEngine/Core"
-	"unsafe"
-)
-
-const (
-	millisPerSecond = 1000
+	"github.com/go-gl/glfw/v3.3/glfw"
+	"github.com/inkyblackness/imgui-go/v4"
 )
 
 var (
-	showDemoWindow    = false
-	showGoDemoWindow  = false
-	clearColor        = [3]float32{0.0, 0.0, 0.0}
-	f                 = float32(0)
-	counter           = 0
-	showAnotherWindow = false
+	clearColor = [3]float32{0.1, 0.5, 0.8}
 )
 
 type Layer struct {
 	Core.Layer
 }
 
-func (l *Layer) OnAttach() {
-	var data int32 = 42
-	imgui.CurrentIO().SetClipboardUserData(unsafe.Pointer(&data))
-}
-
 func (l *Layer) OnUpdate() {
 	Core.ApplicationInstance.GetPlatform().NewFrame()
 	imgui.NewFrame()
 
-	// 1. Show a simple window.
-	// Tip: if we don't call imGui.Begin()/imGui.End() the widgets automatically appears in a window called "Debug".
-	{
-		imgui.Text("ภาษาไทย测试조선말")                   // To display these, you'll need to register a compatible font
-		imgui.Text("Hello, world!")                  // Display some text
-		imgui.SliderFloat("float", &f, 0.0, 1.0)     // Edit 1 float using a slider from 0.0f to 1.0f
-		imgui.ColorEdit3("clear color", &clearColor) // Edit 3 floats representing a color
+	demo := true
+	imgui.ShowDemoWindow(&demo)
 
-		imgui.Checkbox("Demo Window", &showDemoWindow) // Edit booleans storing our window open/close state
-		imgui.Checkbox("Go Demo Window", &showGoDemoWindow)
-		imgui.Checkbox("Another Window", &showAnotherWindow)
-
-		if imgui.Button("Button") { // Buttons return true when clicked (most widgets return true when edited/activated)
-			counter++
-		}
-		imgui.SameLine()
-		imgui.Text(fmt.Sprintf("counter = %d", counter))
-
-		imgui.Text(fmt.Sprintf("Application average %.3f ms/frame (%.1f FPS)",
-			millisPerSecond/imgui.CurrentIO().Framerate(), imgui.CurrentIO().Framerate()))
-	}
-
-	// 2. Show another simple window. In most cases you will use an explicit Beginning/End pair to name your windows.
-	if showAnotherWindow {
-		// Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
-		imgui.BeginV("Another window", &showAnotherWindow, 0)
-		imgui.Text("Hello from another window!")
-		if imgui.Button("Close Me") {
-			showAnotherWindow = false
-		}
-		imgui.End()
-	}
-
-	// 3. Show the ImGui demo window. Most of the sample code is in imGui.ShowDemoWindow().
-	// Read its code to learn more about Dear ImGui!
-	if showDemoWindow {
-		// Normally user code doesn't need/want to call this because positions are saved in .ini file anyway.
-		// Here we just want to make the demo initial state a bit more friendly!
-		const demoX = 650
-		const demoY = 20
-		imgui.SetNextWindowPosV(imgui.Vec2{X: demoX, Y: demoY}, imgui.CondFirstUseEver, imgui.Vec2{})
-
-		imgui.ShowDemoWindow()
-	}
-
-	// Rendering
-	imgui.Render() // This call only creates the draw data list. Actual rendering to framebuffer is done below.
-
+	imgui.Render()
 	Core.ApplicationInstance.GetRenderer().PreRender(clearColor)
-	// At this point, the application could perform its own rendering...
-	// app.RenderScene()
-
-	Core.ApplicationInstance.GetRenderer().Render(Core.ApplicationInstance.GetPlatform().DisplaySize(), Core.ApplicationInstance.GetPlatform().FramebufferSize(), imgui.CurrentDrawData())
+	Core.ApplicationInstance.GetRenderer().Render(
+		Core.ApplicationInstance.GetPlatform().DisplaySize(),
+		Core.ApplicationInstance.GetPlatform().FramebufferSize(),
+		imgui.RenderedDrawData())
 }
 
-func (l *Layer) OnEvent(_ *Events.IEvent) {
+func (l *Layer) OnEvent(event *Events.IEvent) {
+	dispatcher := Events.CreateDispatcher(event)
 
+	dispatcher.Dispatch(l.OnMouseButtonPressedEvent)
+	dispatcher.Dispatch(l.OnMouseButtonReleasedEvent)
+	dispatcher.Dispatch(l.OnMouseMovedEvent)
+	dispatcher.Dispatch(l.OnMouseScrolledEvent)
+	dispatcher.Dispatch(l.OnKeyPressedEvent)
+	dispatcher.Dispatch(l.OnKeyReleasedEvent)
+	dispatcher.Dispatch(l.OnKeyTypedEvent)
+	dispatcher.Dispatch(l.OnWindowResizeEvent)
 }
 
+func (l *Layer) OnMouseButtonPressedEvent(event *Events.MouseButtonPressedEvent) bool {
+	io := imgui.CurrentIO()
+	io.SetMouseButtonDown(event.GetMouseButton(), true)
+	return false
+}
+
+func (l *Layer) OnMouseButtonReleasedEvent(event *Events.MouseButtonReleaseEvent) bool {
+	io := imgui.CurrentIO()
+	io.SetMouseButtonDown(event.GetMouseButton(), false)
+	return false
+}
+
+func (l *Layer) OnMouseMovedEvent(event *Events.MouseMovedEvent) bool {
+	io := imgui.CurrentIO()
+	io.SetMousePosition(imgui.Vec2{
+		X: float32(event.GetX()),
+		Y: float32(event.GetY()),
+	})
+	return false
+}
+
+func (l *Layer) OnMouseScrolledEvent(event *Events.MouseScrolledEvent) bool {
+	io := imgui.CurrentIO()
+	io.AddMouseWheelDelta(float32(event.GetXOffset()), float32(event.GetYOffset()))
+	return false
+}
+
+func (l *Layer) OnKeyPressedEvent(event *Events.KeyPressedEvent) bool {
+	io := imgui.CurrentIO()
+	io.KeyPress(event.GetKeyCode())
+	keyModifiers()
+	return false
+}
+
+func (l *Layer) OnKeyReleasedEvent(event *Events.KeyReleasedEvent) bool {
+	io := imgui.CurrentIO()
+	io.KeyRelease(event.GetKeyCode())
+	keyModifiers()
+	return false
+}
+
+func keyModifiers() {
+	io := imgui.CurrentIO()
+	io.KeyCtrl(int(glfw.KeyLeftControl), int(glfw.KeyRightControl))
+	io.KeyShift(int(glfw.KeyLeftShift), int(glfw.KeyRightShift))
+	io.KeyAlt(int(glfw.KeyLeftAlt), int(glfw.KeyRightAlt))
+	io.KeySuper(int(glfw.KeyLeftSuper), int(glfw.KeyRightSuper))
+}
+
+func (l *Layer) OnKeyTypedEvent(event *Events.KeyTypedEvent) bool {
+	io := imgui.CurrentIO()
+	io.AddInputCharacters(string(rune(event.GetKeyCode())))
+	return false
+}
+
+func (l *Layer) OnWindowResizeEvent(event *Events.WindowResizeEvent) bool {
+	io := imgui.CurrentIO()
+	io.SetDisplaySize(imgui.Vec2{
+		X: float32(event.GetWidth()),
+		Y: float32(event.GetHeight()),
+	})
+	io.DisplayFrameBufferScale()
+	io.SetDisplayFrameBufferScale(imgui.Vec2{X: 1, Y: 1})
+	gl.Viewport(0, 0, int32(event.GetWidth()), int32(event.GetHeight()))
+	return false
+}
 func NewImGui() *Layer {
 	layer := Layer{}
 	layer.Construct("ImGui")
