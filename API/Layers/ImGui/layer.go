@@ -48,22 +48,31 @@ func (l *Layer) OnEvent(event *Events.IEvent) {
 }
 
 func (l *Layer) OnMouseButtonPressedEvent(event *Events.MouseButtonPressedEvent) bool {
-	Common.CoreLogger.Debug("OnMouseButtonPressed: ", event)
+	io := imgui.CurrentIO()
+	io.SetMouseButtonDown(event.GetMouseButton(), true)
+
 	return false
 }
 
 func (l *Layer) OnMouseButtonReleasedEvent(event *Events.MouseButtonReleaseEvent) bool {
-	Common.CoreLogger.Debug("OnMouseButtonReleased: ", event)
+	io := imgui.CurrentIO()
+	io.SetMouseButtonDown(event.GetMouseButton(), false)
 	return false
 }
 
 func (l *Layer) OnMouseMovedEvent(event *Events.MouseMovedEvent) bool {
-	Common.CoreLogger.Debug("OnMouseMovedEvent: ", event)
+	io := imgui.CurrentIO()
+	io.SetMousePos(imgui.Vec2{
+		X: float32(event.GetX()),
+		Y: float32(event.GetY()),
+	})
 	return false
 }
 
 func (l *Layer) OnMouseScrolledEvent(event *Events.MouseScrolledEvent) bool {
-	Common.CoreLogger.Debug("MouseScrolledEvent: ", event)
+	io := imgui.CurrentIO()
+	io.SetMouseWheel(float32(event.GetYOffset()))
+	io.SetMouseWheelH(float32(event.GetXOffset()))
 	return false
 }
 

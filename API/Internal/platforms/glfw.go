@@ -67,6 +67,8 @@ func NewGLFW(io imgui.IO, clientAPI GLFWClientAPI, width int, height int, title 
 		window:  window,
 	}
 
+	platform.setKeyMapping()
+
 	return platform, nil
 }
 
