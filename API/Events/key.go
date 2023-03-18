@@ -54,3 +54,16 @@ func (k *KeyReleasedEvent) Init() {
 	k.eventType = KeyReleased
 	k.eventCategory = Keyboard | Input
 }
+
+type KeyTypedEvent struct {
+	*keyEvent
+}
+
+func (k *KeyTypedEvent) ToString() string {
+	return fmt.Sprintf("KeyTypedEvent: %d", k.KeyCode)
+}
+
+func (k *KeyTypedEvent) Init() {
+	k.eventType = KeyTyped
+	k.eventCategory = Keyboard | Input
+}
