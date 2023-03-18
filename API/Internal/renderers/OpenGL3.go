@@ -1,10 +1,10 @@
 package renderers
 
 import (
-	_ "embed"
+	_ "embed" // using embed for the shader sources
 	"fmt"
-	"github.com/AllenDang/cimgui-go"
 	"github.com/Erickype/GoGameEngine/API/Internal/renderers/gl/v3.2-core/gl"
+	"github.com/inkyblackness/imgui-go/v4"
 )
 
 //go:embed gl-shader/main.vert
@@ -13,6 +13,7 @@ var unVersionedVertexShader string
 //go:embed gl-shader/main.frag
 var unVersionedFragmentShader string
 
+// OpenGL3 implements a renderer based on github.com/go-gl/gl (v3.2-core).
 type OpenGL3 struct {
 	imGuiIO imgui.IO
 
@@ -30,6 +31,8 @@ type OpenGL3 struct {
 	elementsHandle         uint32
 }
 
+// NewOpenGL3 attempts to initialize a renderer.
+// An OpenGL context has to be established before calling this function.
 func NewOpenGL3(io imgui.IO) (*OpenGL3, error) {
 	err := gl.Init()
 	if err != nil {
@@ -42,16 +45,23 @@ func NewOpenGL3(io imgui.IO) (*OpenGL3, error) {
 	}
 	renderer.createDeviceObjects()
 
-	io.SetBackendFlags(io.BackendFlags() | imgui.BackendFlagsRendererHasVtxOffset)
+	io.SetBackendFlags(io.GetBackendFlags() | imgui.BackendFlagsRendererHasVtxOffset)
 
 	return renderer, nil
 }
 
+// Dispose cleans up the resources.
+func (renderer *OpenGL3) Dispose() {
+	renderer.invalidateDeviceObjects()
+}
+
+// PreRender clears the framebuffer.
 func (renderer *OpenGL3) PreRender(clearColor [3]float32) {
 	gl.ClearColor(clearColor[0], clearColor[1], clearColor[2], 1.0)
 	gl.Clear(gl.COLOR_BUFFER_BIT)
 }
 
+// Render translates the ImGui draw data to OpenGL3 commands.
 func (renderer *OpenGL3) Render(displaySize [2]float32, framebufferSize [2]float32, drawData imgui.DrawData) {
 	// Avoid rendering when minimized, scale coordinates for retina displays (screen coordinates != framebuffer coordinates)
 	displayWidth, displayHeight := displaySize[0], displaySize[1]
@@ -113,10 +123,10 @@ func (renderer *OpenGL3) Render(displaySize [2]float32, framebufferSize [2]float
 	gl.PolygonMode(gl.FRONT_AND_BACK, gl.FILL)
 
 	// Setup viewport, orthographic projection matrix
-	// Our visible imGui space lies from draw_data->DisplayPos (top left) to draw_data->DisplayPos+data_data->DisplaySize (bottom right).
+	// Our visible imgui space lies from draw_data->DisplayPos (top left) to draw_data->DisplayPos+data_data->DisplaySize (bottom right).
 	// DisplayMin is typically (0,0) for single viewport apps.
 	gl.Viewport(0, 0, int32(fbWidth), int32(fbHeight))
-	orthographicProjection := [4][4]float32{
+	orthoProjection := [4][4]float32{
 		{2.0 / displayWidth, 0.0, 0.0, 0.0},
 		{0.0, 2.0 / -displayHeight, 0.0, 0.0},
 		{0.0, 0.0, -1.0, 0.0},
@@ -124,12 +134,12 @@ func (renderer *OpenGL3) Render(displaySize [2]float32, framebufferSize [2]float
 	}
 	gl.UseProgram(renderer.shaderHandle)
 	gl.Uniform1i(renderer.attribLocationTex, 0)
-	gl.UniformMatrix4fv(renderer.attribLocationProjMtx, 1, false, &orthographicProjection[0][0])
+	gl.UniformMatrix4fv(renderer.attribLocationProjMtx, 1, false, &orthoProjection[0][0])
 	gl.BindSampler(0, 0) // Rely on combined texture/sampler state.
 
 	// Recreate the VAO every time
 	// (This is to easily allow multiple GL contexts. VAO are not shared among GL contexts, and
-	// we don't track creation/deletion of windows so, we don't have an obvious key to use to cache them.)
+	// we don't track creation/deletion of windows so we don't have an obvious key to use to cache them.)
 	var vaoHandle uint32
 	gl.GenVertexArrays(1, &vaoHandle)
 	gl.BindVertexArray(vaoHandle)
@@ -150,11 +160,11 @@ func (renderer *OpenGL3) Render(displaySize [2]float32, framebufferSize [2]float
 
 	// Draw
 	for _, list := range drawData.CommandLists() {
-		vertexBuffer, vertexBufferSize := list.GetVertexBuffer()
+		vertexBuffer, vertexBufferSize := list.VertexBuffer()
 		gl.BindBuffer(gl.ARRAY_BUFFER, renderer.vboHandle)
 		gl.BufferData(gl.ARRAY_BUFFER, vertexBufferSize, vertexBuffer, gl.STREAM_DRAW)
 
-		indexBuffer, indexBufferSize := list.GetIndexBuffer()
+		indexBuffer, indexBufferSize := list.IndexBuffer()
 		gl.BindBuffer(gl.ELEMENT_ARRAY_BUFFER, renderer.elementsHandle)
 		gl.BufferData(gl.ELEMENT_ARRAY_BUFFER, indexBufferSize, indexBuffer, gl.STREAM_DRAW)
 
@@ -162,11 +172,11 @@ func (renderer *OpenGL3) Render(displaySize [2]float32, framebufferSize [2]float
 			if cmd.HasUserCallback() {
 				cmd.CallUserCallback(list)
 			} else {
-				gl.BindTexture(gl.TEXTURE_2D, uint32(uintptr(cmd.TextureId())))
+				gl.BindTexture(gl.TEXTURE_2D, uint32(cmd.TextureID()))
 				clipRect := cmd.ClipRect()
 				gl.Scissor(int32(clipRect.X), int32(fbHeight)-int32(clipRect.W), int32(clipRect.Z-clipRect.X), int32(clipRect.W-clipRect.Y))
-				gl.DrawElementsBaseVertexWithOffset(gl.TRIANGLES, int32(cmd.ElemCount()), uint32(drawType),
-					uintptr(cmd.IdxOffset()), int32(cmd.VtxOffset()))
+				gl.DrawElementsBaseVertexWithOffset(gl.TRIANGLES, int32(cmd.ElementCount()), uint32(drawType),
+					uintptr(cmd.IndexOffset()*indexSize), int32(cmd.VertexOffset()))
 			}
 		}
 	}
@@ -207,10 +217,6 @@ func (renderer *OpenGL3) Render(displaySize [2]float32, framebufferSize [2]float
 	gl.Scissor(lastScissorBox[0], lastScissorBox[1], lastScissorBox[2], lastScissorBox[3])
 }
 
-func (renderer *OpenGL3) Dispose() {
-	renderer.invalidateDeviceObjects()
-}
-
 func (renderer *OpenGL3) createDeviceObjects() {
 	// Backup GL state
 	var lastTexture int32
@@ -221,7 +227,6 @@ func (renderer *OpenGL3) createDeviceObjects() {
 	gl.GetIntegerv(gl.VERTEX_ARRAY_BINDING, &lastVertexArray)
 
 	vertexShader := renderer.glslVersion + "\n" + unVersionedVertexShader
-
 	fragmentShader := renderer.glslVersion + "\n" + unVersionedFragmentShader
 
 	renderer.shaderHandle = gl.CreateProgram()
@@ -229,10 +234,10 @@ func (renderer *OpenGL3) createDeviceObjects() {
 	renderer.fragHandle = gl.CreateShader(gl.FRAGMENT_SHADER)
 
 	glShaderSource := func(handle uint32, source string) {
-		cSource, free := gl.Strs(source + "\x00")
+		csource, free := gl.Strs(source + "\x00")
 		defer free()
 
-		gl.ShaderSource(handle, 1, cSource, nil)
+		gl.ShaderSource(handle, 1, csource, nil)
 	}
 
 	glShaderSource(renderer.vertHandle, vertexShader)
@@ -263,7 +268,7 @@ func (renderer *OpenGL3) createDeviceObjects() {
 func (renderer *OpenGL3) createFontsTexture() {
 	// Build texture atlas
 	io := imgui.CurrentIO()
-	pixels, width, height, _ := io.Fonts().GetTextureDataAsAlpha8()
+	image := io.Fonts().TextureDataAlpha8()
 
 	// Upload texture to graphics system
 	var lastTexture int32
@@ -273,12 +278,11 @@ func (renderer *OpenGL3) createFontsTexture() {
 	gl.TexParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR)
 	gl.TexParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR)
 	gl.PixelStorei(gl.UNPACK_ROW_LENGTH, 0)
-	gl.TexImage2D(gl.TEXTURE_2D, 0, gl.RED, width, height,
-		0, gl.RED, gl.UNSIGNED_BYTE, pixels)
+	gl.TexImage2D(gl.TEXTURE_2D, 0, gl.RED, int32(image.Width), int32(image.Height),
+		0, gl.RED, gl.UNSIGNED_BYTE, image.Pixels)
 
 	// Store our identifier
-	var texID = uintptr(renderer.fontTexture)
-	io.Fonts().SetTexID(imgui.TextureID(texID))
+	io.Fonts().SetTextureID(imgui.TextureID(renderer.fontTexture))
 
 	// Restore state
 	gl.BindTexture(gl.TEXTURE_2D, uint32(lastTexture))
@@ -317,8 +321,7 @@ func (renderer *OpenGL3) invalidateDeviceObjects() {
 
 	if renderer.fontTexture != 0 {
 		gl.DeleteTextures(1, &renderer.fontTexture)
-
-		imgui.CurrentIO().Fonts().SetTexID(imgui.TextureID(uintptr(0)))
+		imgui.CurrentIO().Fonts().SetTextureID(0)
 		renderer.fontTexture = 0
 	}
 }

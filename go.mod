@@ -3,8 +3,8 @@ module github.com/Erickype/GoGameEngine
 go 1.20
 
 require (
-	github.com/AllenDang/cimgui-go v0.0.0-20230306042723-30acd7d694b1
 	github.com/go-gl/glfw/v3.3/glfw v0.0.0-20221017161538-93cebf72946b
+	github.com/inkyblackness/imgui-go/v4 v4.7.0
 	github.com/withmandala/go-log v0.1.0
 )
 

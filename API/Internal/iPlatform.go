@@ -1,6 +1,8 @@
 package Internal
 
-import "github.com/AllenDang/cimgui-go"
+import (
+	"github.com/inkyblackness/imgui-go/v4"
+)
 
 // IPlatform covers mouse/keyboard/gamepad inputs, cursor shape, timing, windowing.
 type IPlatform interface {

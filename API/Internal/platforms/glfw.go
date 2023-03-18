@@ -2,8 +2,8 @@ package platforms
 
 import (
 	"fmt"
-	"github.com/AllenDang/cimgui-go"
 	"github.com/go-gl/glfw/v3.3/glfw"
+	"github.com/inkyblackness/imgui-go/v4"
 	"runtime"
 	"unsafe"
 )
@@ -18,10 +18,9 @@ const (
 
 // GLFW implements a platform based on github.com/go-gl/glfw (v3.3).
 type GLFW struct {
-	imGuiIO          imgui.IO
-	window           *glfw.Window
-	time             float64
-	mouseJustPressed [3]bool
+	imGuiIO imgui.IO
+	window  *glfw.Window
+	time    float64
 }
 
 func (g *GLFW) SetUserPointer(pointer unsafe.Pointer) {
@@ -119,71 +118,27 @@ func (g *GLFW) PostRender() {
 }
 
 func (g *GLFW) setKeyMapping() {
-	g.imGuiIO.SetKeyEventNativeData(imgui.KeyTab, int32(glfw.KeyTab), int32(glfw.GetKeyScancode(glfw.KeyTab)))
-	g.imGuiIO.SetKeyEventNativeData(imgui.KeyLeftArrow, int32(glfw.KeyLeft), int32(glfw.GetKeyScancode(glfw.KeyLeft)))
-	g.imGuiIO.SetKeyEventNativeData(imgui.KeyRightArrow, int32(glfw.KeyRight), int32(glfw.GetKeyScancode(glfw.KeyRight)))
-	g.imGuiIO.SetKeyEventNativeData(imgui.KeyUpArrow, int32(glfw.KeyUp), int32(glfw.GetKeyScancode(glfw.KeyUp)))
-	g.imGuiIO.SetKeyEventNativeData(imgui.KeyDownArrow, int32(glfw.KeyDown), int32(glfw.GetKeyScancode(glfw.KeyDown)))
-	g.imGuiIO.SetKeyEventNativeData(imgui.KeyPageDown, int32(glfw.KeyPageDown), int32(glfw.GetKeyScancode(glfw.KeyPageDown)))
-	g.imGuiIO.SetKeyEventNativeData(imgui.KeyPageUp, int32(glfw.KeyPageUp), int32(glfw.GetKeyScancode(glfw.KeyPageUp)))
-	g.imGuiIO.SetKeyEventNativeData(imgui.KeyHome, int32(glfw.KeyHome), int32(glfw.GetKeyScancode(glfw.KeyHome)))
-	g.imGuiIO.SetKeyEventNativeData(imgui.KeyEnd, int32(glfw.KeyEnd), int32(glfw.GetKeyScancode(glfw.KeyEnd)))
-	g.imGuiIO.SetKeyEventNativeData(imgui.KeyInsert, int32(glfw.KeyInsert), int32(glfw.GetKeyScancode(glfw.KeyInsert)))
-	g.imGuiIO.SetKeyEventNativeData(imgui.KeyDelete, int32(glfw.KeyDelete), int32(glfw.GetKeyScancode(glfw.KeyDelete)))
-	g.imGuiIO.SetKeyEventNativeData(imgui.KeyBackspace, int32(glfw.KeyBackspace), int32(glfw.GetKeyScancode(glfw.KeyBackspace)))
-	g.imGuiIO.SetKeyEventNativeData(imgui.KeySpace, int32(glfw.KeySpace), int32(glfw.GetKeyScancode(glfw.KeySpace)))
-	g.imGuiIO.SetKeyEventNativeData(imgui.KeyEnter, int32(glfw.KeyEnter), int32(glfw.GetKeyScancode(glfw.KeyEnter)))
-	g.imGuiIO.SetKeyEventNativeData(imgui.KeyEscape, int32(glfw.KeyEscape), int32(glfw.GetKeyScancode(glfw.KeyEscape)))
-	g.imGuiIO.SetKeyEventNativeData(imgui.KeyA, int32(glfw.KeyA), int32(glfw.GetKeyScancode(glfw.KeyA)))
-	g.imGuiIO.SetKeyEventNativeData(imgui.KeyC, int32(glfw.KeyC), int32(glfw.GetKeyScancode(glfw.KeyC)))
-	g.imGuiIO.SetKeyEventNativeData(imgui.KeyV, int32(glfw.KeyV), int32(glfw.GetKeyScancode(glfw.KeyV)))
-	g.imGuiIO.SetKeyEventNativeData(imgui.KeyX, int32(glfw.KeyX), int32(glfw.GetKeyScancode(glfw.KeyX)))
-	g.imGuiIO.SetKeyEventNativeData(imgui.KeyY, int32(glfw.KeyY), int32(glfw.GetKeyScancode(glfw.KeyY)))
-	g.imGuiIO.SetKeyEventNativeData(imgui.KeyZ, int32(glfw.KeyZ), int32(glfw.GetKeyScancode(glfw.KeyZ)))
-}
-
-func (g *GLFW) installCallbacks() {
-	g.window.SetMouseButtonCallback(g.mouseButtonChange)
-	g.window.SetScrollCallback(g.mouseScrollChange)
-	g.window.SetKeyCallback(g.keyChange)
-	g.window.SetCharCallback(g.charChange)
-}
-
-var glfwButtonIndexByID = map[glfw.MouseButton]int{
-	glfw.MouseButton1: mouseButtonPrimary,
-	glfw.MouseButton2: mouseButtonSecondary,
-	glfw.MouseButton3: mouseButtonTertiary,
-}
-
-var glfwButtonIDByIndex = map[int]glfw.MouseButton{
-	mouseButtonPrimary:   glfw.MouseButton1,
-	mouseButtonSecondary: glfw.MouseButton2,
-	mouseButtonTertiary:  glfw.MouseButton3,
-}
-
-func (g *GLFW) mouseButtonChange(_ *glfw.Window, rawButton glfw.MouseButton, action glfw.Action, _ glfw.ModifierKey) {
-	buttonIndex, known := glfwButtonIndexByID[rawButton]
-
-	if known && (action == glfw.Press) {
-		g.mouseJustPressed[buttonIndex] = true
-	}
-}
-
-func (g *GLFW) mouseScrollChange(_ *glfw.Window, x, y float64) {
-	g.imGuiIO.AddMouseWheelDelta(float32(x), float32(y))
-}
-
-func (g *GLFW) keyChange(_ *glfw.Window, key glfw.Key, _ int, action glfw.Action, _ glfw.ModifierKey) {
-	if action == glfw.Press {
-		g.imGuiIO.AddKeyEvent(imgui.Key(key), true)
-	}
-	if action == glfw.Release {
-		g.imGuiIO.AddKeyEvent(imgui.Key(key), true)
-	}
-}
-
-func (g *GLFW) charChange(_ *glfw.Window, char rune) {
-	g.imGuiIO.AddInputCharacter(uint32(char))
+	g.imGuiIO.KeyMap(imgui.KeyTab, int(glfw.KeyTab))
+	g.imGuiIO.KeyMap(imgui.KeyLeftArrow, int(glfw.KeyLeft))
+	g.imGuiIO.KeyMap(imgui.KeyRightArrow, int(glfw.KeyRight))
+	g.imGuiIO.KeyMap(imgui.KeyUpArrow, int(glfw.KeyUp))
+	g.imGuiIO.KeyMap(imgui.KeyDownArrow, int(glfw.KeyDown))
+	g.imGuiIO.KeyMap(imgui.KeyPageUp, int(glfw.KeyPageUp))
+	g.imGuiIO.KeyMap(imgui.KeyPageDown, int(glfw.KeyPageDown))
+	g.imGuiIO.KeyMap(imgui.KeyHome, int(glfw.KeyHome))
+	g.imGuiIO.KeyMap(imgui.KeyEnd, int(glfw.KeyEnd))
+	g.imGuiIO.KeyMap(imgui.KeyInsert, int(glfw.KeyInsert))
+	g.imGuiIO.KeyMap(imgui.KeyDelete, int(glfw.KeyDelete))
+	g.imGuiIO.KeyMap(imgui.KeyBackspace, int(glfw.KeyBackspace))
+	g.imGuiIO.KeyMap(imgui.KeySpace, int(glfw.KeySpace))
+	g.imGuiIO.KeyMap(imgui.KeyEnter, int(glfw.KeyEnter))
+	g.imGuiIO.KeyMap(imgui.KeyEscape, int(glfw.KeyEscape))
+	g.imGuiIO.KeyMap(imgui.KeyA, int(glfw.KeyA))
+	g.imGuiIO.KeyMap(imgui.KeyC, int(glfw.KeyC))
+	g.imGuiIO.KeyMap(imgui.KeyV, int(glfw.KeyV))
+	g.imGuiIO.KeyMap(imgui.KeyX, int(glfw.KeyX))
+	g.imGuiIO.KeyMap(imgui.KeyY, int(glfw.KeyY))
+	g.imGuiIO.KeyMap(imgui.KeyZ, int(glfw.KeyZ))
 }
 
 // ClipboardText returns the current clipboard text, if available.
