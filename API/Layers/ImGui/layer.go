@@ -4,6 +4,7 @@ import (
 	"github.com/AllenDang/cimgui-go"
 	"github.com/Erickype/GoGameEngine/API/Common"
 	"github.com/Erickype/GoGameEngine/API/Events"
+	"github.com/Erickype/GoGameEngine/API/Internal/renderers/gl/v3.2-core/gl"
 	"github.com/Erickype/GoGameEngine/Core"
 	"unsafe"
 )
@@ -86,7 +87,10 @@ func (l *Layer) OnKeyReleasedEvent(event *Events.KeyReleasedEvent) bool {
 	return false
 }
 func (l *Layer) OnWindowResizeEvent(event *Events.WindowResizeEvent) bool {
-	Common.CoreLogger.Debug("OnWindowResizeEvent: ", event)
+	io := imgui.CurrentIO()
+	io.SetDisplaySize(imgui.NewVec2(float32(event.GetWidth()), float32(event.GetHeight())))
+	io.SetDisplayFramebufferScale(imgui.NewVec2(1, 1))
+	gl.Viewport(0, 0, int32(event.GetWidth()), int32(event.GetHeight()))
 	return false
 }
 func NewImGui() *Layer {
