@@ -14,6 +14,7 @@ func declareCallbacks(w *Window) {
 	w.setMouseCallback()
 	w.setScrollCallback()
 	w.setCursorPosCallback()
+	w.setCharCallback()
 }
 
 func (w *Window) setSizeCallback() {
@@ -70,6 +71,17 @@ func (w *Window) setKeyCallback() {
 			(*data.eventCallback)(&event)
 			break
 		}
+	})
+}
+
+func (w *Window) setCharCallback() {
+	w.Platform.(*platforms.GLFW).GetWindow().SetCharCallback(func(window *glfw.Window, char rune) {
+		data := (*data)(window.GetUserPointer())
+		event := common.EventFactory.CreateEvent(Events2.KeyTyped)
+		if keyTypedEvent, ok := event.(*Events2.KeyTypedEvent); ok {
+			keyTypedEvent.KeyCode = int(char)
+		}
+		(*data.eventCallback)(&event)
 	})
 }
 

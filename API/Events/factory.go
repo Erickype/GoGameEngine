@@ -37,6 +37,7 @@ func NewEventFactory() *EventFactory {
 	}
 	factory.events[KeyPressed] = &KeyPressedEvent{keyEvent: &keyEvent}
 	factory.events[KeyReleased] = &KeyReleasedEvent{keyEvent: &keyEvent}
+	factory.events[KeyTyped] = &KeyTypedEvent{keyEvent: &keyEvent}
 
 	factory.events[WindowResize] = &WindowResizeEvent{Event: &event}
 	factory.events[WindowClose] = &WindowCloseEvent{Event: &event}
