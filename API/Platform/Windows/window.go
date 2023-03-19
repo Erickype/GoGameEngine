@@ -26,6 +26,10 @@ type Window struct {
 	Renderer Internal.IRenderer
 }
 
+func (w *Window) GetNativeWindow() unsafe.Pointer {
+	return w.Platform.GetWindowPtr()
+}
+
 func (w *Window) GetWidth() int {
 	return w.data.width
 }
