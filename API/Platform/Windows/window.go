@@ -22,12 +22,20 @@ type data struct {
 
 type Window struct {
 	data     *data
-	Platform Internal.IPlatform
-	Renderer Internal.IRenderer
+	platform *Internal.IPlatform
+	renderer *Internal.IRenderer
+}
+
+func (w *Window) GetPlatform() *Internal.IPlatform {
+	return w.platform
+}
+
+func (w *Window) GetRenderer() *Internal.IRenderer {
+	return w.renderer
 }
 
 func (w *Window) GetNativeWindow() unsafe.Pointer {
-	return w.Platform.GetWindowPtr()
+	return (*w.platform).GetWindowPtr()
 }
 
 func (w *Window) GetWidth() int {
@@ -56,13 +64,13 @@ func (w *Window) IsVSync() bool {
 }
 
 func (w *Window) OnUpdate() {
-	w.Platform.PostRender()
-	w.Platform.ProcessEvents()
+	(*w.platform).PostRender()
+	(*w.platform).ProcessEvents()
 }
 
 func (w *Window) Shutdown() {
-	w.Platform.(*platforms.GLFW).Dispose()
-	w.Renderer.(*renderers.OpenGL3).Dispose()
+	(*w.platform).(*platforms.GLFW).Dispose()
+	(*w.renderer).(*renderers.OpenGL3).Dispose()
 }
 
 func (w *Window) Init() {
@@ -77,15 +85,17 @@ func (w *Window) Init() {
 	if err != nil {
 		common.CoreLogger.Fatal("Failing creating platform: ", os.Stderr)
 	}
-	w.Platform = platform
+	iPlatform := Internal.IPlatform(platform)
+	w.platform = &iPlatform
 
 	renderer, err := renderers.NewOpenGL3(io)
 	if err != nil {
 		common.CoreLogger.Fatal("Failing creating renderer: ", os.Stderr)
 	}
-	w.Renderer = renderer
+	iRenderer := Internal.IRenderer(renderer)
+	w.renderer = &iRenderer
 
-	w.Platform.(*platforms.GLFW).SetUserPointer(unsafe.Pointer(w.data))
+	(*w.platform).(*platforms.GLFW).SetUserPointer(unsafe.Pointer(w.data))
 
 	declareCallbacks(w)
 }
