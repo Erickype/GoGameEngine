@@ -1,7 +1,6 @@
 package Core
 
 import (
-	"github.com/Erickype/GoGameEngine/API"
 	"github.com/Erickype/GoGameEngine/API/Common"
 	"github.com/Erickype/GoGameEngine/API/Events"
 	"github.com/Erickype/GoGameEngine/API/Internal"
@@ -34,8 +33,6 @@ func (a *Application) run() {
 				(*layer).OnUpdate()
 			}
 		}
-		Common.CoreLogger.Fatal("Click: ", (*API.GetInputInstance()).IsKeyPressed(32))
-
 		(*a.window).OnUpdate()
 	}
 }
@@ -71,7 +68,6 @@ func (a *Application) onEvent(event *Events.IEvent) {
 			}
 		}
 	}
-
 }
 
 func (a *Application) PushLayer(layer *ILayer) {

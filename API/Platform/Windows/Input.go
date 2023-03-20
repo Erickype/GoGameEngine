@@ -12,11 +12,9 @@ func init() {
 	API.SetInputInstance(&iInput)
 }
 
-type Input struct {
-	*API.Input
-}
+type Input struct{}
 
-func (i *Input) isKeyPressed(keyCode int, windowPtr unsafe.Pointer) bool {
+func (i *Input) IsKeyPressed(keyCode int, windowPtr unsafe.Pointer) bool {
 
 	window := (*glfw.Window)(windowPtr)
 	state := window.GetKey(glfw.Key(keyCode))

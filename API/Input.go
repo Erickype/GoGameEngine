@@ -1,27 +1,19 @@
 package API
 
+import (
+	"unsafe"
+)
+
 type IInput interface {
-	IsKeyPressed(keyCode int) bool
-	isKeyPressed(keyCode int) bool
+	IsKeyPressed(keyCode int, window unsafe.Pointer) bool
 }
 
 var inputInstance *IInput
-
-type Input struct {
-}
-
-func (i *Input) IsKeyPressed(keyCode int) bool {
-	return (*inputInstance).isKeyPressed(keyCode)
-}
-
-func (i *Input) isKeyPressed(_ int) bool {
-	return true
-}
 
 func SetInputInstance(instance *IInput) {
 	inputInstance = instance
 }
 
-func GetInputInstance() *IInput {
+func _() *IInput {
 	return inputInstance
 }
