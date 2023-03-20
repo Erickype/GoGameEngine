@@ -17,17 +17,17 @@ type Layer struct {
 }
 
 func (l *Layer) OnUpdate() {
-	Core.ApplicationInstance.GetPlatform().NewFrame()
+	(*Core.ApplicationInstance.GetPlatform()).NewFrame()
 	imgui.NewFrame()
 
 	demo := true
 	imgui.ShowDemoWindow(&demo)
 
 	imgui.Render()
-	Core.ApplicationInstance.GetRenderer().PreRender(clearColor)
-	Core.ApplicationInstance.GetRenderer().Render(
-		Core.ApplicationInstance.GetPlatform().DisplaySize(),
-		Core.ApplicationInstance.GetPlatform().FramebufferSize(),
+	(*Core.ApplicationInstance.GetRenderer()).PreRender(clearColor)
+	(*Core.ApplicationInstance.GetRenderer()).Render(
+		(*Core.ApplicationInstance.GetPlatform()).DisplaySize(),
+		(*Core.ApplicationInstance.GetPlatform()).FramebufferSize(),
 		imgui.RenderedDrawData())
 }
 
