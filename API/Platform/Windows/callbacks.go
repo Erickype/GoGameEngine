@@ -18,7 +18,7 @@ func declareCallbacks(w *Window) {
 }
 
 func (w *Window) setSizeCallback() {
-	w.Platform.(*platforms.GLFW).GetWindow().SetSizeCallback(func(window *glfw.Window, width int, height int) {
+	(*w.GetPlatform()).(*platforms.GLFW).GetWindow().SetSizeCallback(func(window *glfw.Window, width int, height int) {
 		data := (*data)(window.GetUserPointer())
 		data.width = width
 		data.height = height
@@ -34,7 +34,7 @@ func (w *Window) setSizeCallback() {
 }
 
 func (w *Window) setCloseCallback() {
-	w.Platform.(*platforms.GLFW).GetWindow().SetCloseCallback(func(window *glfw.Window) {
+	(*w.GetPlatform()).(*platforms.GLFW).GetWindow().SetCloseCallback(func(window *glfw.Window) {
 		data := (*data)(window.GetUserPointer())
 		event := common.EventFactory.CreateEvent(Events2.WindowClose)
 		if data.eventCallback != nil {
@@ -44,7 +44,7 @@ func (w *Window) setCloseCallback() {
 }
 
 func (w *Window) setKeyCallback() {
-	w.Platform.(*platforms.GLFW).GetWindow().SetKeyCallback(func(window *glfw.Window, key glfw.Key, scancode int, action glfw.Action, mods glfw.ModifierKey) {
+	(*w.GetPlatform()).(*platforms.GLFW).GetWindow().SetKeyCallback(func(window *glfw.Window, key glfw.Key, scancode int, action glfw.Action, mods glfw.ModifierKey) {
 		data := (*data)(window.GetUserPointer())
 		switch action {
 		case glfw.Press:
@@ -75,7 +75,7 @@ func (w *Window) setKeyCallback() {
 }
 
 func (w *Window) setCharCallback() {
-	w.Platform.(*platforms.GLFW).GetWindow().SetCharCallback(func(window *glfw.Window, char rune) {
+	(*w.GetPlatform()).(*platforms.GLFW).GetWindow().SetCharCallback(func(window *glfw.Window, char rune) {
 		data := (*data)(window.GetUserPointer())
 		event := common.EventFactory.CreateEvent(Events2.KeyTyped)
 		if keyTypedEvent, ok := event.(*Events2.KeyTypedEvent); ok {
@@ -86,7 +86,7 @@ func (w *Window) setCharCallback() {
 }
 
 func (w *Window) setMouseCallback() {
-	w.Platform.(*platforms.GLFW).GetWindow().SetMouseButtonCallback(func(window *glfw.Window, button glfw.MouseButton, action glfw.Action, mods glfw.ModifierKey) {
+	(*w.GetPlatform()).(*platforms.GLFW).GetWindow().SetMouseButtonCallback(func(window *glfw.Window, button glfw.MouseButton, action glfw.Action, mods glfw.ModifierKey) {
 		data := (*data)(window.GetUserPointer())
 		switch action {
 		case glfw.Press:
@@ -108,7 +108,7 @@ func (w *Window) setMouseCallback() {
 }
 
 func (w *Window) setScrollCallback() {
-	w.Platform.(*platforms.GLFW).GetWindow().SetScrollCallback(func(window *glfw.Window, xOff float64, yOff float64) {
+	(*w.GetPlatform()).(*platforms.GLFW).GetWindow().SetScrollCallback(func(window *glfw.Window, xOff float64, yOff float64) {
 		data := (*data)(window.GetUserPointer())
 		event := common.EventFactory.CreateEvent(Events2.MouseScrolled)
 		if mouseScrolledEvent, ok := event.(*Events2.MouseScrolledEvent); ok {
@@ -120,7 +120,7 @@ func (w *Window) setScrollCallback() {
 }
 
 func (w *Window) setCursorPosCallback() {
-	w.Platform.(*platforms.GLFW).GetWindow().SetCursorPosCallback(func(window *glfw.Window, xPos float64, yPos float64) {
+	(*w.GetPlatform()).(*platforms.GLFW).GetWindow().SetCursorPosCallback(func(window *glfw.Window, xPos float64, yPos float64) {
 		data := (*data)(window.GetUserPointer())
 		event := common.EventFactory.CreateEvent(Events2.MouseMoved)
 		if mouseMovedEvent, ok := event.(*Events2.MouseMovedEvent); ok {
