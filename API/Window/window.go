@@ -2,6 +2,7 @@ package Window
 
 import (
 	"github.com/Erickype/GoGameEngine/API/Events"
+	"github.com/Erickype/GoGameEngine/API/Internal"
 	"unsafe"
 )
 
@@ -23,4 +24,6 @@ type IWindow interface {
 	Shutdown()
 	Init()
 	GetNativeWindow() unsafe.Pointer
+	GetPlatform() *Internal.IPlatform
+	GetRenderer() *Internal.IRenderer
 }
