@@ -34,7 +34,7 @@ func (a *Application) run() {
 				(*layer).OnUpdate()
 			}
 		}
-		Log.GetCoreInstance().Debug((*Input.GetInputInstance()).IsKeyPressed(32, (*ApplicationInstance.GetPlatform()).GetWindowPtr()))
+		Log.GetCoreInstance().Debug((*Input.GetInputInstance()).GetMousePosition((*ApplicationInstance.GetPlatform()).GetWindowPtr()))
 		(*a.window).OnUpdate()
 	}
 }
