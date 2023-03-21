@@ -1,15 +1,15 @@
 package Windows
 
 import (
-	"github.com/Erickype/GoGameEngine/API"
+	abstractInput "github.com/Erickype/GoGameEngine/API/Input"
 	"github.com/go-gl/glfw/v3.3/glfw"
 	"unsafe"
 )
 
 func init() {
 	input := &Input{}
-	iInput := API.IInput(input)
-	API.SetInputInstance(&iInput)
+	iInput := abstractInput.IInput(input)
+	abstractInput.SetInputInstance(&iInput)
 }
 
 type Input struct{}

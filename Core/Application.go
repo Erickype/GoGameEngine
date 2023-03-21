@@ -1,8 +1,8 @@
 package Core
 
 import (
-	"github.com/Erickype/GoGameEngine/API"
 	"github.com/Erickype/GoGameEngine/API/Events"
+	"github.com/Erickype/GoGameEngine/API/Input"
 	"github.com/Erickype/GoGameEngine/API/Internal"
 	"github.com/Erickype/GoGameEngine/API/Log"
 	"github.com/Erickype/GoGameEngine/API/Window"
@@ -34,7 +34,7 @@ func (a *Application) run() {
 				(*layer).OnUpdate()
 			}
 		}
-		Log.GetCoreInstance().Debug((*API.GetInputInstance()).IsKeyPressed(32, (*ApplicationInstance.GetPlatform()).GetWindowPtr()))
+		Log.GetCoreInstance().Debug((*Input.GetInputInstance()).IsKeyPressed(32, (*ApplicationInstance.GetPlatform()).GetWindowPtr()))
 		(*a.window).OnUpdate()
 	}
 }
