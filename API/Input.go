@@ -14,6 +14,6 @@ func SetInputInstance(instance *IInput) {
 	inputInstance = instance
 }
 
-func _() *IInput {
+func GetInputInstance() *IInput {
 	return inputInstance
 }
