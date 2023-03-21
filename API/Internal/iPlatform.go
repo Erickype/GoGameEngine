@@ -2,6 +2,7 @@ package Internal
 
 import (
 	"github.com/inkyblackness/imgui-go/v4"
+	"unsafe"
 )
 
 // IPlatform covers mouse/keyboard/gamepad inputs, cursor shape, timing, windowing.
@@ -22,6 +23,8 @@ type IPlatform interface {
 	ClipboardText() (string, error)
 	// SetClipboardText sets the text as the current text of the clipboard.
 	SetClipboardText(text string)
+
+	GetWindowPtr() unsafe.Pointer
 }
 
 // IRenderer covers rendering imGui draw data.

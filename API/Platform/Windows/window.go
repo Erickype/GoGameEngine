@@ -1,10 +1,10 @@
 package Windows
 
 import (
-	common "github.com/Erickype/GoGameEngine/API/Common"
 	"github.com/Erickype/GoGameEngine/API/Internal"
 	"github.com/Erickype/GoGameEngine/API/Internal/platforms"
 	"github.com/Erickype/GoGameEngine/API/Internal/renderers"
+	"github.com/Erickype/GoGameEngine/API/Log"
 	abstractWindow "github.com/Erickype/GoGameEngine/API/Window"
 	"github.com/go-gl/glfw/v3.3/glfw"
 	"github.com/inkyblackness/imgui-go/v4"
@@ -22,8 +22,20 @@ type data struct {
 
 type Window struct {
 	data     *data
-	Platform Internal.IPlatform
-	Renderer Internal.IRenderer
+	platform *Internal.IPlatform
+	renderer *Internal.IRenderer
+}
+
+func (w *Window) GetPlatform() *Internal.IPlatform {
+	return w.platform
+}
+
+func (w *Window) GetRenderer() *Internal.IRenderer {
+	return w.renderer
+}
+
+func (w *Window) GetNativeWindow() unsafe.Pointer {
+	return (*w.platform).GetWindowPtr()
 }
 
 func (w *Window) GetWidth() int {
@@ -52,18 +64,18 @@ func (w *Window) IsVSync() bool {
 }
 
 func (w *Window) OnUpdate() {
-	w.Platform.PostRender()
-	w.Platform.ProcessEvents()
+	(*w.platform).PostRender()
+	(*w.platform).ProcessEvents()
 }
 
 func (w *Window) Shutdown() {
-	w.Platform.(*platforms.GLFW).Dispose()
-	w.Renderer.(*renderers.OpenGL3).Dispose()
+	(*w.platform).(*platforms.GLFW).Dispose()
+	(*w.renderer).(*renderers.OpenGL3).Dispose()
 }
 
 func (w *Window) Init() {
 
-	common.CoreLogger.Info("Creating window", w.data.title, w.data.width, w.data.height)
+	Log.GetCoreInstance().Info("Creating window", w.data.title, w.data.width, w.data.height)
 
 	//This creates the imGui context and IO for platform creation
 	imgui.CreateContext(nil)
@@ -71,17 +83,19 @@ func (w *Window) Init() {
 
 	platform, err := platforms.NewGLFW(io, platforms.GLFWClientAPIOpenGL3, w.data.width, w.data.height, w.data.title)
 	if err != nil {
-		common.CoreLogger.Fatal("Failing creating platform: ", os.Stderr)
+		Log.GetCoreInstance().Fatal("Failing creating platform: ", os.Stderr)
 	}
-	w.Platform = platform
+	iPlatform := Internal.IPlatform(platform)
+	w.platform = &iPlatform
 
 	renderer, err := renderers.NewOpenGL3(io)
 	if err != nil {
-		common.CoreLogger.Fatal("Failing creating renderer: ", os.Stderr)
+		Log.GetCoreInstance().Fatal("Failing creating renderer: ", os.Stderr)
 	}
-	w.Renderer = renderer
+	iRenderer := Internal.IRenderer(renderer)
+	w.renderer = &iRenderer
 
-	w.Platform.(*platforms.GLFW).SetUserPointer(unsafe.Pointer(w.data))
+	(*w.platform).(*platforms.GLFW).SetUserPointer(unsafe.Pointer(w.data))
 
 	declareCallbacks(w)
 }

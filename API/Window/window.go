@@ -2,6 +2,8 @@ package Window
 
 import (
 	"github.com/Erickype/GoGameEngine/API/Events"
+	"github.com/Erickype/GoGameEngine/API/Internal"
+	"unsafe"
 )
 
 type EventCallBackFn func(event *Events.IEvent)
@@ -21,4 +23,7 @@ type IWindow interface {
 	OnUpdate()
 	Shutdown()
 	Init()
+	GetNativeWindow() unsafe.Pointer
+	GetPlatform() *Internal.IPlatform
+	GetRenderer() *Internal.IRenderer
 }

@@ -27,6 +27,10 @@ func (g *GLFW) SetUserPointer(pointer unsafe.Pointer) {
 	g.window.SetUserPointer(pointer)
 }
 
+func (g *GLFW) GetWindowPtr() unsafe.Pointer {
+	return unsafe.Pointer(g.window)
+}
+
 func (g *GLFW) GetWindow() *glfw.Window {
 	return g.window
 }
