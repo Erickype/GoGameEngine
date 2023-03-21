@@ -1,10 +1,10 @@
 package Core
 
 import (
-	"github.com/Erickype/GoGameEngine/API"
-	"github.com/Erickype/GoGameEngine/API/Common"
 	"github.com/Erickype/GoGameEngine/API/Events"
+	"github.com/Erickype/GoGameEngine/API/Input"
 	"github.com/Erickype/GoGameEngine/API/Internal"
+	"github.com/Erickype/GoGameEngine/API/Log"
 	"github.com/Erickype/GoGameEngine/API/Window"
 )
 
@@ -34,7 +34,7 @@ func (a *Application) run() {
 				(*layer).OnUpdate()
 			}
 		}
-		Common.CoreLogger.Debug((*API.GetInputInstance()).IsKeyPressed(32, (*ApplicationInstance.GetPlatform()).GetWindowPtr()))
+		Log.GetCoreInstance().Debug((*Input.GetInputInstance()).IsKeyPressed(32, (*ApplicationInstance.GetPlatform()).GetWindowPtr()))
 		(*a.window).OnUpdate()
 	}
 }
@@ -45,7 +45,7 @@ func (a *Application) destroy() {
 }
 
 func (a *Application) init(layer *ILayer, window *Window.IWindow) {
-	Common.CoreLogger.Info("Starting engine!!")
+	Log.GetCoreInstance().Info("Starting engine!!")
 	a.running = true
 	a.window = window
 
@@ -59,7 +59,7 @@ func (a *Application) init(layer *ILayer, window *Window.IWindow) {
 }
 
 func (a *Application) onEvent(event *Events.IEvent) {
-	Common.CoreLogger.Trace((*event).ToString())
+	Log.GetCoreInstance().Trace((*event).ToString())
 
 	if *a.layerStack.layerInsert != 0 {
 		for i := len(*a.layerStack.layers) - 1; i >= 0; i-- {

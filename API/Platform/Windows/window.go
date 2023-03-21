@@ -1,10 +1,10 @@
 package Windows
 
 import (
-	common "github.com/Erickype/GoGameEngine/API/Common"
 	"github.com/Erickype/GoGameEngine/API/Internal"
 	"github.com/Erickype/GoGameEngine/API/Internal/platforms"
 	"github.com/Erickype/GoGameEngine/API/Internal/renderers"
+	"github.com/Erickype/GoGameEngine/API/Log"
 	abstractWindow "github.com/Erickype/GoGameEngine/API/Window"
 	"github.com/go-gl/glfw/v3.3/glfw"
 	"github.com/inkyblackness/imgui-go/v4"
@@ -75,7 +75,7 @@ func (w *Window) Shutdown() {
 
 func (w *Window) Init() {
 
-	common.CoreLogger.Info("Creating window", w.data.title, w.data.width, w.data.height)
+	Log.GetCoreInstance().Info("Creating window", w.data.title, w.data.width, w.data.height)
 
 	//This creates the imGui context and IO for platform creation
 	imgui.CreateContext(nil)
@@ -83,14 +83,14 @@ func (w *Window) Init() {
 
 	platform, err := platforms.NewGLFW(io, platforms.GLFWClientAPIOpenGL3, w.data.width, w.data.height, w.data.title)
 	if err != nil {
-		common.CoreLogger.Fatal("Failing creating platform: ", os.Stderr)
+		Log.GetCoreInstance().Fatal("Failing creating platform: ", os.Stderr)
 	}
 	iPlatform := Internal.IPlatform(platform)
 	w.platform = &iPlatform
 
 	renderer, err := renderers.NewOpenGL3(io)
 	if err != nil {
-		common.CoreLogger.Fatal("Failing creating renderer: ", os.Stderr)
+		Log.GetCoreInstance().Fatal("Failing creating renderer: ", os.Stderr)
 	}
 	iRenderer := Internal.IRenderer(renderer)
 	w.renderer = &iRenderer
