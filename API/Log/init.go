@@ -15,7 +15,7 @@ func GetCoreInstance() *CoreLogger {
 	return coreLogger
 }
 
-func _() *ClientLogger {
+func GetClientInstance() *ClientLogger {
 	return clientLogger
 }
 
