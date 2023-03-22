@@ -2,7 +2,6 @@ package Core
 
 import (
 	"github.com/Erickype/GoGameEngine/API/Events"
-	"github.com/Erickype/GoGameEngine/API/Input"
 	"github.com/Erickype/GoGameEngine/API/Internal"
 	"github.com/Erickype/GoGameEngine/API/Log"
 	"github.com/Erickype/GoGameEngine/API/Window"
@@ -34,7 +33,6 @@ func (a *Application) run() {
 				(*layer).OnUpdate()
 			}
 		}
-		Log.GetCoreInstance().Debug((*Input.GetInputInstance()).GetMousePosition((*ApplicationInstance.GetPlatform()).GetWindowPtr()))
 		(*a.window).OnUpdate()
 	}
 }
