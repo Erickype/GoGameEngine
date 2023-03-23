@@ -111,3 +111,14 @@ func Create(props *abstractWindow.Properties) *Window {
 	window.Init()
 	return window
 }
+
+func CreateAbstractWindow(title string, width int, height int) *abstractWindow.IWindow {
+	window := Create(&abstractWindow.Properties{
+		Title:  title,
+		Width:  width,
+		Height: height,
+	})
+
+	iWindow := abstractWindow.IWindow(window)
+	return &iWindow
+}

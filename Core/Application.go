@@ -2,16 +2,15 @@ package Core
 
 import (
 	"github.com/Erickype/GoGameEngine/API/Events"
-	"github.com/Erickype/GoGameEngine/API/Input"
 	"github.com/Erickype/GoGameEngine/API/Internal"
 	"github.com/Erickype/GoGameEngine/API/Log"
 	"github.com/Erickype/GoGameEngine/API/Window"
 )
 
 type IApplication interface {
-	run()
-	destroy()
-	init(layer *ILayer, window *Window.IWindow)
+	Run()
+	Destroy()
+	init(window *Window.IWindow)
 	onEvent(event *Events.IEvent)
 	PushLayer(layer *ILayer)
 	PushOverlay(overlay *ILayer)
@@ -27,24 +26,23 @@ type Application struct {
 	layerStack *LayerStack
 }
 
-func (a *Application) run() {
+func (a *Application) Run() {
 	for !(*(*a.window).GetPlatform()).ShouldStop() {
 		if *a.layerStack.layerInsert != 0 {
 			for _, layer := range *a.layerStack.layers {
 				(*layer).OnUpdate()
 			}
 		}
-		Log.GetCoreInstance().Debug((*Input.GetInputInstance()).GetMousePosition((*ApplicationInstance.GetPlatform()).GetWindowPtr()))
 		(*a.window).OnUpdate()
 	}
 }
 
-func (a *Application) destroy() {
+func (a *Application) Destroy() {
 	a.running = false
 	(*a.window).Shutdown()
 }
 
-func (a *Application) init(layer *ILayer, window *Window.IWindow) {
+func (a *Application) init(window *Window.IWindow) {
 	Log.GetCoreInstance().Info("Starting engine!!")
 	a.running = true
 	a.window = window
@@ -55,12 +53,9 @@ func (a *Application) init(layer *ILayer, window *Window.IWindow) {
 	(*a.window).SetEventCallback(&eventCallbackFn)
 	a.layerStack = &LayerStack{}
 	a.layerStack.Construct()
-	a.PushLayer(layer)
 }
 
 func (a *Application) onEvent(event *Events.IEvent) {
-	Log.GetCoreInstance().Trace((*event).ToString())
-
 	if *a.layerStack.layerInsert != 0 {
 		for i := len(*a.layerStack.layers) - 1; i >= 0; i-- {
 			layer := (*a.layerStack.layers)[i]
@@ -89,11 +84,7 @@ func (a *Application) GetRenderer() *Internal.IRenderer {
 	return (*a.window).GetRenderer()
 }
 
-// CreateApplication This is the entry point to create an application
-func CreateApplication(layer *ILayer, window *Window.IWindow) {
-	application := &Application{}
-	ApplicationInstance = application
-	application.init(layer, window)
-	application.run()
-	application.destroy()
+func (a *Application) Construct(window *Window.IWindow) {
+	ApplicationInstance = a
+	a.init(window)
 }
