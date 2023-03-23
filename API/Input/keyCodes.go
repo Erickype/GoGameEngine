@@ -1,6 +1,4 @@
-package Keys
-
-import "C"
+package Input
 
 // Key corresponds to a keyboard key.
 type Key int
