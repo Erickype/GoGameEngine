@@ -56,8 +56,6 @@ func (a *Application) init(window *Window.IWindow) {
 }
 
 func (a *Application) onEvent(event *Events.IEvent) {
-	Log.GetCoreInstance().Trace((*event).ToString())
-
 	if *a.layerStack.layerInsert != 0 {
 		for i := len(*a.layerStack.layers) - 1; i >= 0; i-- {
 			layer := (*a.layerStack.layers)[i]
