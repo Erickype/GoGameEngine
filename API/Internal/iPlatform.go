@@ -1,7 +1,7 @@
 package Internal
 
 import (
-	"github.com/inkyblackness/imgui-go/v4"
+	imgui "github.com/AllenDang/cimgui-go"
 	"unsafe"
 )
 
@@ -32,5 +32,5 @@ type IRenderer interface {
 	// PreRender causes the display buffer to be prepared for new output.
 	PreRender(clearColor [3]float32)
 	// Render draws the provided imGui draw data.
-	Render(displaySize [2]float32, framebufferSize [2]float32, drawData imgui.DrawData)
+	Render(displaySize [2]float32, framebufferSize [2]float32, drawData imgui.ImDrawData)
 }

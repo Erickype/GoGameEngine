@@ -1,11 +1,10 @@
 package Layers
 
 import (
+	imgui "github.com/AllenDang/cimgui-go"
 	"github.com/Erickype/GoGameEngine/API/Events"
-	"github.com/Erickype/GoGameEngine/API/Internal/renderers/gl/v3.2-core/gl"
 	"github.com/Erickype/GoGameEngine/Core"
-	"github.com/go-gl/glfw/v3.3/glfw"
-	"github.com/inkyblackness/imgui-go/v4"
+	"github.com/go-gl/gl/v4.1-core/gl"
 )
 
 var (
@@ -20,15 +19,14 @@ func (l *Layer) OnUpdate() {
 	(*Core.ApplicationInstance.GetPlatform()).NewFrame()
 	imgui.NewFrame()
 
-	demo := true
-	imgui.ShowDemoWindow(&demo)
+	imgui.ShowDemoWindow()
 
 	imgui.Render()
 	(*Core.ApplicationInstance.GetRenderer()).PreRender(clearColor)
 	(*Core.ApplicationInstance.GetRenderer()).Render(
 		(*Core.ApplicationInstance.GetPlatform()).DisplaySize(),
 		(*Core.ApplicationInstance.GetPlatform()).FramebufferSize(),
-		imgui.RenderedDrawData())
+		imgui.GetDrawData())
 }
 
 func (l *Layer) OnEvent(event *Events.IEvent) {
@@ -45,20 +43,20 @@ func (l *Layer) OnEvent(event *Events.IEvent) {
 }
 
 func (l *Layer) OnMouseButtonPressedEvent(event *Events.MouseButtonPressedEvent) bool {
-	io := imgui.CurrentIO()
+	io := imgui.GetIO()
 	io.SetMouseButtonDown(event.GetMouseButton(), true)
 	return false
 }
 
 func (l *Layer) OnMouseButtonReleasedEvent(event *Events.MouseButtonReleaseEvent) bool {
-	io := imgui.CurrentIO()
+	io := imgui.GetIO()
 	io.SetMouseButtonDown(event.GetMouseButton(), false)
 	return false
 }
 
 func (l *Layer) OnMouseMovedEvent(event *Events.MouseMovedEvent) bool {
-	io := imgui.CurrentIO()
-	io.SetMousePosition(imgui.Vec2{
+	io := imgui.GetIO()
+	io.SetMousePos(imgui.ImVec2{
 		X: float32(event.GetX()),
 		Y: float32(event.GetY()),
 	})
@@ -66,47 +64,47 @@ func (l *Layer) OnMouseMovedEvent(event *Events.MouseMovedEvent) bool {
 }
 
 func (l *Layer) OnMouseScrolledEvent(event *Events.MouseScrolledEvent) bool {
-	io := imgui.CurrentIO()
+	io := imgui.GetIO()
 	io.AddMouseWheelDelta(float32(event.GetXOffset()), float32(event.GetYOffset()))
 	return false
 }
 
 func (l *Layer) OnKeyPressedEvent(event *Events.KeyPressedEvent) bool {
-	io := imgui.CurrentIO()
-	io.KeyPress(event.GetKeyCode())
+	io := imgui.GetIO()
+	io.AddKeyEvent(imgui.ImGuiKey(event.GetKeyCode()), true)
 	keyModifiers()
 	return false
 }
 
 func (l *Layer) OnKeyReleasedEvent(event *Events.KeyReleasedEvent) bool {
-	io := imgui.CurrentIO()
-	io.KeyRelease(event.GetKeyCode())
+	io := imgui.GetIO()
+	io.AddKeyEvent(imgui.ImGuiKey(event.GetKeyCode()), false)
 	keyModifiers()
 	return false
 }
 
 func keyModifiers() {
-	io := imgui.CurrentIO()
-	io.KeyCtrl(int(glfw.KeyLeftControl), int(glfw.KeyRightControl))
-	io.KeyShift(int(glfw.KeyLeftShift), int(glfw.KeyRightShift))
-	io.KeyAlt(int(glfw.KeyLeftAlt), int(glfw.KeyRightAlt))
-	io.KeySuper(int(glfw.KeyLeftSuper), int(glfw.KeyRightSuper))
+	io := imgui.GetIO()
+	io.SetKeyCtrl(true)
+	io.SetKeySuper(true)
+	io.SetKeyShift(true)
+	io.SetKeyAlt(true)
 }
 
 func (l *Layer) OnKeyTypedEvent(event *Events.KeyTypedEvent) bool {
-	io := imgui.CurrentIO()
-	io.AddInputCharacters(string(rune(event.GetKeyCode())))
+	io := imgui.GetIO()
+	io.AddInputCharacter(uint32(event.GetKeyCode()))
 	return false
 }
 
 func (l *Layer) OnWindowResizeEvent(event *Events.WindowResizeEvent) bool {
-	io := imgui.CurrentIO()
-	io.SetDisplaySize(imgui.Vec2{
+	io := imgui.GetIO()
+	io.SetDisplaySize(imgui.ImVec2{
 		X: float32(event.GetWidth()),
 		Y: float32(event.GetHeight()),
 	})
-	io.DisplayFrameBufferScale()
-	io.SetDisplayFrameBufferScale(imgui.Vec2{X: 1, Y: 1})
+	io.GetDisplayFramebufferScale()
+	io.SetDisplayFramebufferScale(imgui.ImVec2{X: 1, Y: 1})
 	gl.Viewport(0, 0, int32(event.GetWidth()), int32(event.GetHeight()))
 	return false
 }

@@ -1,13 +1,13 @@
 package Windows
 
 import (
+	imgui "github.com/AllenDang/cimgui-go"
 	"github.com/Erickype/GoGameEngine/API/Internal"
 	"github.com/Erickype/GoGameEngine/API/Internal/platforms"
 	"github.com/Erickype/GoGameEngine/API/Internal/renderers"
 	"github.com/Erickype/GoGameEngine/API/Log"
 	abstractWindow "github.com/Erickype/GoGameEngine/API/Window"
 	"github.com/go-gl/glfw/v3.3/glfw"
-	"github.com/inkyblackness/imgui-go/v4"
 	"os"
 	"unsafe"
 )
@@ -78,8 +78,12 @@ func (w *Window) Init() {
 	Log.GetCoreInstance().Info("Creating window", w.data.title, w.data.width, w.data.height)
 
 	//This creates the imGui context and IO for platform creation
-	imgui.CreateContext(nil)
-	io := imgui.CurrentIO()
+	imgui.CreateContext()
+	io := imgui.GetIO()
+	io.SetConfigFlags(io.GetConfigFlags() | imgui.ImGuiConfigFlags_NavEnableKeyboard)
+	io.SetConfigFlags(io.GetConfigFlags() | imgui.ImGuiConfigFlags_NavEnableGamepad)
+	io.SetConfigFlags(io.GetConfigFlags() | imgui.ImGuiConfigFlags_DockingEnable)
+	io.SetConfigFlags(io.GetConfigFlags() | imgui.ImGuiConfigFlags_ViewportsEnable)
 
 	platform, err := platforms.NewGLFW(io, platforms.GLFWClientAPIOpenGL3, w.data.width, w.data.height, w.data.title)
 	if err != nil {
