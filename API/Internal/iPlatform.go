@@ -1,7 +1,8 @@
 package Internal
 
 import (
-	"github.com/inkyblackness/imgui-go/v4"
+	imgui "github.com/AllenDang/cimgui-go"
+	"github.com/go-gl/glfw/v3.3/glfw"
 	"unsafe"
 )
 
@@ -25,6 +26,8 @@ type IPlatform interface {
 	SetClipboardText(text string)
 
 	GetWindowPtr() unsafe.Pointer
+
+	GetKeyMap() map[glfw.Key]imgui.ImGuiKey
 }
 
 // IRenderer covers rendering imGui draw data.
@@ -32,5 +35,5 @@ type IRenderer interface {
 	// PreRender causes the display buffer to be prepared for new output.
 	PreRender(clearColor [3]float32)
 	// Render draws the provided imGui draw data.
-	Render(displaySize [2]float32, framebufferSize [2]float32, drawData imgui.DrawData)
+	Render(displaySize [2]float32, framebufferSize [2]float32, drawData imgui.ImDrawData)
 }

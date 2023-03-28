@@ -2,8 +2,8 @@ package platforms
 
 import (
 	"fmt"
+	imgui "github.com/AllenDang/cimgui-go"
 	"github.com/go-gl/glfw/v3.3/glfw"
-	"github.com/inkyblackness/imgui-go/v4"
 	"runtime"
 	"unsafe"
 )
@@ -18,9 +18,14 @@ const (
 
 // GLFW implements a platform based on github.com/go-gl/glfw (v3.3).
 type GLFW struct {
-	imGuiIO imgui.IO
+	imGuiIO imgui.ImGuiIO
 	window  *glfw.Window
 	time    float64
+	keyMap  map[glfw.Key]imgui.ImGuiKey
+}
+
+func (g *GLFW) GetKeyMap() map[glfw.Key]imgui.ImGuiKey {
+	return g.keyMap
 }
 
 func (g *GLFW) SetUserPointer(pointer unsafe.Pointer) {
@@ -35,7 +40,7 @@ func (g *GLFW) GetWindow() *glfw.Window {
 	return g.window
 }
 
-func NewGLFW(io imgui.IO, clientAPI GLFWClientAPI, width int, height int, title string) (*GLFW, error) {
+func NewGLFW(io imgui.ImGuiIO, clientAPI GLFWClientAPI, width int, height int, title string) (*GLFW, error) {
 	runtime.LockOSThread()
 
 	err := glfw.Init()
@@ -106,7 +111,7 @@ func (g *GLFW) FramebufferSize() [2]float32 {
 func (g *GLFW) NewFrame() {
 	// Setup display size (every frame to accommodate for window resizing)
 	displaySize := g.DisplaySize()
-	g.imGuiIO.SetDisplaySize(imgui.Vec2{X: displaySize[0], Y: displaySize[1]})
+	g.imGuiIO.SetDisplaySize(imgui.ImVec2{X: displaySize[0], Y: displaySize[1]})
 
 	// Setup time step
 	currentTime := glfw.GetTime()
@@ -122,27 +127,38 @@ func (g *GLFW) PostRender() {
 }
 
 func (g *GLFW) setKeyMapping() {
-	g.imGuiIO.KeyMap(imgui.KeyTab, int(glfw.KeyTab))
-	g.imGuiIO.KeyMap(imgui.KeyLeftArrow, int(glfw.KeyLeft))
-	g.imGuiIO.KeyMap(imgui.KeyRightArrow, int(glfw.KeyRight))
-	g.imGuiIO.KeyMap(imgui.KeyUpArrow, int(glfw.KeyUp))
-	g.imGuiIO.KeyMap(imgui.KeyDownArrow, int(glfw.KeyDown))
-	g.imGuiIO.KeyMap(imgui.KeyPageUp, int(glfw.KeyPageUp))
-	g.imGuiIO.KeyMap(imgui.KeyPageDown, int(glfw.KeyPageDown))
-	g.imGuiIO.KeyMap(imgui.KeyHome, int(glfw.KeyHome))
-	g.imGuiIO.KeyMap(imgui.KeyEnd, int(glfw.KeyEnd))
-	g.imGuiIO.KeyMap(imgui.KeyInsert, int(glfw.KeyInsert))
-	g.imGuiIO.KeyMap(imgui.KeyDelete, int(glfw.KeyDelete))
-	g.imGuiIO.KeyMap(imgui.KeyBackspace, int(glfw.KeyBackspace))
-	g.imGuiIO.KeyMap(imgui.KeySpace, int(glfw.KeySpace))
-	g.imGuiIO.KeyMap(imgui.KeyEnter, int(glfw.KeyEnter))
-	g.imGuiIO.KeyMap(imgui.KeyEscape, int(glfw.KeyEscape))
-	g.imGuiIO.KeyMap(imgui.KeyA, int(glfw.KeyA))
-	g.imGuiIO.KeyMap(imgui.KeyC, int(glfw.KeyC))
-	g.imGuiIO.KeyMap(imgui.KeyV, int(glfw.KeyV))
-	g.imGuiIO.KeyMap(imgui.KeyX, int(glfw.KeyX))
-	g.imGuiIO.KeyMap(imgui.KeyY, int(glfw.KeyY))
-	g.imGuiIO.KeyMap(imgui.KeyZ, int(glfw.KeyZ))
+	g.keyMap = map[glfw.Key]imgui.ImGuiKey{
+		glfw.KeyTab:       imgui.ImGuiKey_Tab,
+		glfw.KeyLeft:      imgui.ImGuiKey_LeftArrow,
+		glfw.KeyRight:     imgui.ImGuiKey_RightArrow,
+		glfw.KeyUp:        imgui.ImGuiKey_UpArrow,
+		glfw.KeyDown:      imgui.ImGuiKey_DownArrow,
+		glfw.KeyPageUp:    imgui.ImGuiKey_PageUp,
+		glfw.KeyPageDown:  imgui.ImGuiKey_PageDown,
+		glfw.KeyHome:      imgui.ImGuiKey_Home,
+		glfw.KeyEnd:       imgui.ImGuiKey_End,
+		glfw.KeyInsert:    imgui.ImGuiKey_Insert,
+		glfw.KeyDelete:    imgui.ImGuiKey_Delete,
+		glfw.KeyBackspace: imgui.ImGuiKey_Backspace,
+		glfw.KeySpace:     imgui.ImGuiKey_Space,
+		glfw.KeyEnter:     imgui.ImGuiKey_Enter,
+		glfw.KeyEscape:    imgui.ImGuiKey_Escape,
+		glfw.KeyA:         imgui.ImGuiKey_A,
+		glfw.KeyC:         imgui.ImGuiKey_C,
+		glfw.KeyV:         imgui.ImGuiKey_V,
+		glfw.KeyX:         imgui.ImGuiKey_X,
+		glfw.KeyY:         imgui.ImGuiKey_Y,
+		glfw.KeyZ:         imgui.ImGuiKey_Z,
+
+		glfw.KeyLeftControl:  imgui.ImGuiKey_ModCtrl,
+		glfw.KeyRightControl: imgui.ImGuiKey_ModCtrl,
+		glfw.KeyLeftAlt:      imgui.ImGuiKey_ModAlt,
+		glfw.KeyRightAlt:     imgui.ImGuiKey_ModAlt,
+		glfw.KeyLeftSuper:    imgui.ImGuiKey_ModSuper,
+		glfw.KeyRightSuper:   imgui.ImGuiKey_ModSuper,
+		glfw.KeyLeftShift:    imgui.ImGuiKey_ModShift,
+		glfw.KeyRightShift:   imgui.ImGuiKey_ModShift,
+	}
 }
 
 // ClipboardText returns the current clipboard text, if available.
