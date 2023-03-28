@@ -21,6 +21,11 @@ type GLFW struct {
 	imGuiIO imgui.ImGuiIO
 	window  *glfw.Window
 	time    float64
+	keyMap  map[glfw.Key]imgui.ImGuiKey
+}
+
+func (g *GLFW) GetKeyMap() map[glfw.Key]imgui.ImGuiKey {
+	return g.keyMap
 }
 
 func (g *GLFW) SetUserPointer(pointer unsafe.Pointer) {
@@ -122,27 +127,38 @@ func (g *GLFW) PostRender() {
 }
 
 func (g *GLFW) setKeyMapping() {
-	g.imGuiIO.SetKeyEventNativeData(imgui.ImGuiKey_Tab, int32(glfw.KeyTab), int32(glfw.GetKeyScancode(glfw.KeyTab)))
-	g.imGuiIO.SetKeyEventNativeData(imgui.ImGuiKey_LeftArrow, int32(glfw.KeyLeft), int32(glfw.GetKeyScancode(glfw.KeyLeft)))
-	g.imGuiIO.SetKeyEventNativeData(imgui.ImGuiKey_RightArrow, int32(glfw.KeyRight), int32(glfw.GetKeyScancode(glfw.KeyRight)))
-	g.imGuiIO.SetKeyEventNativeData(imgui.ImGuiKey_UpArrow, int32(glfw.KeyUp), int32(glfw.GetKeyScancode(glfw.KeyUp)))
-	g.imGuiIO.SetKeyEventNativeData(imgui.ImGuiKey_DownArrow, int32(glfw.KeyDown), int32(glfw.GetKeyScancode(glfw.KeyDown)))
-	g.imGuiIO.SetKeyEventNativeData(imgui.ImGuiKey_PageUp, int32(glfw.KeyPageUp), int32(glfw.GetKeyScancode(glfw.KeyPageUp)))
-	g.imGuiIO.SetKeyEventNativeData(imgui.ImGuiKey_PageDown, int32(glfw.KeyPageDown), int32(glfw.GetKeyScancode(glfw.KeyPageDown)))
-	g.imGuiIO.SetKeyEventNativeData(imgui.ImGuiKey_Home, int32(glfw.KeyHome), int32(glfw.GetKeyScancode(glfw.KeyHome)))
-	g.imGuiIO.SetKeyEventNativeData(imgui.ImGuiKey_End, int32(glfw.KeyEnd), int32(glfw.GetKeyScancode(glfw.KeyEnd)))
-	g.imGuiIO.SetKeyEventNativeData(imgui.ImGuiKey_Insert, int32(glfw.KeyInsert), int32(glfw.GetKeyScancode(glfw.KeyInsert)))
-	g.imGuiIO.SetKeyEventNativeData(imgui.ImGuiKey_Delete, int32(glfw.KeyDelete), int32(glfw.GetKeyScancode(glfw.KeyDelete)))
-	g.imGuiIO.SetKeyEventNativeData(imgui.ImGuiKey_Backspace, int32(glfw.KeyBackspace), int32(glfw.GetKeyScancode(glfw.KeyBackspace)))
-	g.imGuiIO.SetKeyEventNativeData(imgui.ImGuiKey_Space, int32(glfw.KeySpace), int32(glfw.GetKeyScancode(glfw.KeySpace)))
-	g.imGuiIO.SetKeyEventNativeData(imgui.ImGuiKey_Enter, int32(glfw.KeyEnter), int32(glfw.GetKeyScancode(glfw.KeyEnter)))
-	g.imGuiIO.SetKeyEventNativeData(imgui.ImGuiKey_Escape, int32(glfw.KeyEscape), int32(glfw.GetKeyScancode(glfw.KeyEscape)))
-	g.imGuiIO.SetKeyEventNativeData(imgui.ImGuiKey_A, int32(glfw.KeyA), int32(glfw.GetKeyScancode(glfw.KeyA)))
-	g.imGuiIO.SetKeyEventNativeData(imgui.ImGuiKey_C, int32(glfw.KeyC), int32(glfw.GetKeyScancode(glfw.KeyC)))
-	g.imGuiIO.SetKeyEventNativeData(imgui.ImGuiKey_V, int32(glfw.KeyV), int32(glfw.GetKeyScancode(glfw.KeyV)))
-	g.imGuiIO.SetKeyEventNativeData(imgui.ImGuiKey_X, int32(glfw.KeyX), int32(glfw.GetKeyScancode(glfw.KeyX)))
-	g.imGuiIO.SetKeyEventNativeData(imgui.ImGuiKey_Y, int32(glfw.KeyY), int32(glfw.GetKeyScancode(glfw.KeyY)))
-	g.imGuiIO.SetKeyEventNativeData(imgui.ImGuiKey_Z, int32(glfw.KeyZ), int32(glfw.GetKeyScancode(glfw.KeyZ)))
+	g.keyMap = map[glfw.Key]imgui.ImGuiKey{
+		glfw.KeyTab:       imgui.ImGuiKey_Tab,
+		glfw.KeyLeft:      imgui.ImGuiKey_LeftArrow,
+		glfw.KeyRight:     imgui.ImGuiKey_RightArrow,
+		glfw.KeyUp:        imgui.ImGuiKey_UpArrow,
+		glfw.KeyDown:      imgui.ImGuiKey_DownArrow,
+		glfw.KeyPageUp:    imgui.ImGuiKey_PageUp,
+		glfw.KeyPageDown:  imgui.ImGuiKey_PageDown,
+		glfw.KeyHome:      imgui.ImGuiKey_Home,
+		glfw.KeyEnd:       imgui.ImGuiKey_End,
+		glfw.KeyInsert:    imgui.ImGuiKey_Insert,
+		glfw.KeyDelete:    imgui.ImGuiKey_Delete,
+		glfw.KeyBackspace: imgui.ImGuiKey_Backspace,
+		glfw.KeySpace:     imgui.ImGuiKey_Space,
+		glfw.KeyEnter:     imgui.ImGuiKey_Enter,
+		glfw.KeyEscape:    imgui.ImGuiKey_Escape,
+		glfw.KeyA:         imgui.ImGuiKey_A,
+		glfw.KeyC:         imgui.ImGuiKey_C,
+		glfw.KeyV:         imgui.ImGuiKey_V,
+		glfw.KeyX:         imgui.ImGuiKey_X,
+		glfw.KeyY:         imgui.ImGuiKey_Y,
+		glfw.KeyZ:         imgui.ImGuiKey_Z,
+
+		glfw.KeyLeftControl:  imgui.ImGuiKey_ModCtrl,
+		glfw.KeyRightControl: imgui.ImGuiKey_ModCtrl,
+		glfw.KeyLeftAlt:      imgui.ImGuiKey_ModAlt,
+		glfw.KeyRightAlt:     imgui.ImGuiKey_ModAlt,
+		glfw.KeyLeftSuper:    imgui.ImGuiKey_ModSuper,
+		glfw.KeyRightSuper:   imgui.ImGuiKey_ModSuper,
+		glfw.KeyLeftShift:    imgui.ImGuiKey_ModShift,
+		glfw.KeyRightShift:   imgui.ImGuiKey_ModShift,
+	}
 }
 
 // ClipboardText returns the current clipboard text, if available.

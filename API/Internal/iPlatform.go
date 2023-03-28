@@ -2,6 +2,7 @@ package Internal
 
 import (
 	imgui "github.com/AllenDang/cimgui-go"
+	"github.com/go-gl/glfw/v3.3/glfw"
 	"unsafe"
 )
 
@@ -25,6 +26,8 @@ type IPlatform interface {
 	SetClipboardText(text string)
 
 	GetWindowPtr() unsafe.Pointer
+
+	GetKeyMap() map[glfw.Key]imgui.ImGuiKey
 }
 
 // IRenderer covers rendering imGui draw data.
