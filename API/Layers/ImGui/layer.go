@@ -5,6 +5,7 @@ import (
 	"github.com/Erickype/GoGameEngine/API/Events"
 	"github.com/Erickype/GoGameEngine/Core"
 	"github.com/go-gl/gl/v4.1-core/gl"
+	"github.com/go-gl/glfw/v3.3/glfw"
 )
 
 var (
@@ -70,25 +71,29 @@ func (l *Layer) OnMouseScrolledEvent(event *Events.MouseScrolledEvent) bool {
 }
 
 func (l *Layer) OnKeyPressedEvent(event *Events.KeyPressedEvent) bool {
+
 	io := imgui.GetIO()
-	io.AddKeyEvent(imgui.ImGuiKey(event.GetKeyCode()), true)
-	keyModifiers()
+	iKeyEvent := Events.IKeyEvent(event)
+	io.AddKeyEvent(keyMapped(&iKeyEvent), true)
 	return false
 }
 
 func (l *Layer) OnKeyReleasedEvent(event *Events.KeyReleasedEvent) bool {
 	io := imgui.GetIO()
-	io.AddKeyEvent(imgui.ImGuiKey(event.GetKeyCode()), false)
-	keyModifiers()
+	iKeyEvent := Events.IKeyEvent(event)
+	io.AddKeyEvent(keyMapped(&iKeyEvent), false)
 	return false
 }
 
-func keyModifiers() {
-	io := imgui.GetIO()
-	io.SetKeyCtrl(true)
-	io.SetKeySuper(true)
-	io.SetKeyShift(true)
-	io.SetKeyAlt(true)
+func keyMapped(event *Events.IKeyEvent) imgui.ImGuiKey {
+	platform := *Core.ApplicationInstance.GetPlatform()
+
+	imKey := imgui.ImGuiKey((*event).GetKeyCode())
+
+	if mapped, ok := platform.GetKeyMap()[glfw.Key((*event).GetKeyCode())]; ok {
+		imKey = mapped
+	}
+	return imKey
 }
 
 func (l *Layer) OnKeyTypedEvent(event *Events.KeyTypedEvent) bool {
