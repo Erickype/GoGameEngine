@@ -67,8 +67,6 @@ func NewGLFW(io imgui.ImGuiIO, clientAPI GLFWClientAPI, width int, height int, t
 		glfw.Terminate()
 		return nil, fmt.Errorf("failed to create window: %w", err)
 	}
-	window.MakeContextCurrent()
-	glfw.SwapInterval(1)
 
 	platform := &GLFW{
 		imGuiIO: io,
@@ -119,11 +117,6 @@ func (g *GLFW) NewFrame() {
 		g.imGuiIO.SetDeltaTime(float32(currentTime - g.time))
 	}
 	g.time = currentTime
-}
-
-// PostRender performs a buffer swap.
-func (g *GLFW) PostRender() {
-	g.window.SwapBuffers()
 }
 
 func (g *GLFW) setKeyMapping() {
