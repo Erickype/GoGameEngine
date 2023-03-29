@@ -16,7 +16,9 @@ type LayerStack struct {
 }
 
 func (l *LayerStack) PushLayer(layer *ILayer) {
-	*l.layers = append((*l.layers)[:*l.layerInsert], layer)
+	*l.layers = append(*l.layers, nil)
+	copy((*l.layers)[*l.layerInsert+1:], (*l.layers)[*l.layerInsert:])
+	(*l.layers)[*l.layerInsert] = layer
 	*l.layerInsert++
 }
 
@@ -47,7 +49,7 @@ func (l *LayerStack) PopOverlay(overlay *ILayer) {
 func (l *LayerStack) Construct() {
 	i := 0
 	l.layerInsert = &i
-	layers := make([]*ILayer, 1)
+	layers := make([]*ILayer, 0)
 	l.layers = &layers
 }
 
