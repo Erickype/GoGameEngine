@@ -24,6 +24,7 @@ type Application struct {
 	window     *Window.IWindow
 	running    bool
 	layerStack *LayerStack
+	imGuiLayer *ImGuiLayer
 }
 
 func (a *Application) Run() {
@@ -33,6 +34,13 @@ func (a *Application) Run() {
 				(*layer).OnUpdate()
 			}
 		}
+
+		a.imGuiLayer.Begin()
+		for _, layer := range *a.layerStack.layers {
+			(*layer).OnImGuiRender()
+		}
+		a.imGuiLayer.End()
+
 		(*a.window).OnUpdate()
 	}
 }
@@ -53,6 +61,10 @@ func (a *Application) init(window *Window.IWindow) {
 	(*a.window).SetEventCallback(&eventCallbackFn)
 	a.layerStack = &LayerStack{}
 	a.layerStack.Construct()
+	//ImguiLayer Init
+	a.imGuiLayer = NewImGui()
+	iImGui := ILayer(a.imGuiLayer)
+	a.layerStack.PushOverlay(&iImGui)
 }
 
 func (a *Application) onEvent(event *Events.IEvent) {
