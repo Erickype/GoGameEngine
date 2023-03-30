@@ -26,7 +26,6 @@ func (l *ImGuiLayer) OnImGuiRender() {
 
 func (l *ImGuiLayer) End() {
 	imgui.Render()
-	(*ApplicationInstance.GetRenderer()).PreRender(clearColor)
 	(*ApplicationInstance.GetRenderer()).Render(
 		(*ApplicationInstance.GetPlatform()).DisplaySize(),
 		(*ApplicationInstance.GetPlatform()).FramebufferSize(),

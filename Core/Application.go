@@ -5,6 +5,8 @@ import (
 	"github.com/Erickype/GoGameEngine/API/Internal"
 	"github.com/Erickype/GoGameEngine/API/Log"
 	"github.com/Erickype/GoGameEngine/API/Window"
+	"github.com/go-gl/gl/v4.1-compatibility/gl"
+	"unsafe"
 )
 
 type IApplication interface {
@@ -18,7 +20,12 @@ type IApplication interface {
 	GetRenderer() *Internal.IRenderer
 }
 
-var ApplicationInstance *Application
+var (
+	ApplicationInstance *Application
+	vertexArray         uint32
+	vertexBuffer        uint32
+	indexBuffer         uint32
+)
 
 type Application struct {
 	window     *Window.IWindow
@@ -29,6 +36,11 @@ type Application struct {
 
 func (a *Application) Run() {
 	for !(*(*a.window).GetPlatform()).ShouldStop() {
+		(*ApplicationInstance.GetRenderer()).PreRender(clearColor)
+
+		gl.BindVertexArray(vertexArray)
+		gl.DrawElements(gl.TRIANGLES, 3, gl.UNSIGNED_INT, nil)
+
 		if *a.layerStack.layerInsert != 0 {
 			for _, layer := range *a.layerStack.layers {
 				(*layer).OnUpdate()
@@ -65,6 +77,28 @@ func (a *Application) init(window *Window.IWindow) {
 	a.imGuiLayer = NewImGui()
 	iImGui := ILayer(a.imGuiLayer)
 	a.layerStack.PushOverlay(&iImGui)
+	gl.GenVertexArrays(1, &vertexArray)
+	gl.BindVertexArray(vertexArray)
+
+	gl.GenBuffers(1, &vertexBuffer)
+	gl.BindBuffer(gl.ARRAY_BUFFER, vertexBuffer)
+
+	vertices := [][]float32{
+		{-.5, -.5, 0},
+		{.5, .5, 0},
+		{0, .5, 0}}
+
+	gl.BufferData(gl.ARRAY_BUFFER, len(vertices), unsafe.Pointer(&vertices), gl.STATIC_DRAW)
+
+	gl.EnableVertexAttribArray(0)
+	gl.VertexAttribPointer(0, 3, gl.FLOAT, false, 3*4, nil)
+
+	gl.GenBuffers(1, &indexBuffer)
+	gl.BindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer)
+
+	indices := []int{0, 1, 2}
+
+	gl.BufferData(gl.ARRAY_BUFFER, len(indices), unsafe.Pointer(&indices), gl.STATIC_DRAW)
 }
 
 func (a *Application) onEvent(event *Events.IEvent) {
