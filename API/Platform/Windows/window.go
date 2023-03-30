@@ -6,6 +6,7 @@ import (
 	"github.com/Erickype/GoGameEngine/API/Internal/platforms"
 	"github.com/Erickype/GoGameEngine/API/Internal/renderers"
 	"github.com/Erickype/GoGameEngine/API/Log"
+	"github.com/Erickype/GoGameEngine/API/Platform/Opengl"
 	abstractWindow "github.com/Erickype/GoGameEngine/API/Window"
 	"github.com/go-gl/glfw/v3.3/glfw"
 	"os"
@@ -21,9 +22,10 @@ type data struct {
 }
 
 type Window struct {
-	data     *data
-	platform *Internal.IPlatform
-	renderer *Internal.IRenderer
+	data            *data
+	platform        *Internal.IPlatform
+	renderer        *Internal.IRenderer
+	graphicsContext *Opengl.Context
 }
 
 func (w *Window) GetPlatform() *Internal.IPlatform {
@@ -64,7 +66,7 @@ func (w *Window) IsVSync() bool {
 }
 
 func (w *Window) OnUpdate() {
-	(*w.platform).PostRender()
+	w.graphicsContext.SwapBuffers()
 	(*w.platform).ProcessEvents()
 }
 
@@ -91,6 +93,10 @@ func (w *Window) Init() {
 	}
 	iPlatform := Internal.IPlatform(platform)
 	w.platform = &iPlatform
+
+	//Opengl context
+	w.graphicsContext = Opengl.NewOpenglContext((*glfw.Window)((*w.GetPlatform()).GetWindowPtr()))
+	w.graphicsContext.Init()
 
 	renderer, err := renderers.NewOpenGL3(io)
 	if err != nil {

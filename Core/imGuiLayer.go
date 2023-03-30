@@ -1,9 +1,8 @@
-package Layers
+package Core
 
 import (
 	imgui "github.com/AllenDang/cimgui-go"
 	"github.com/Erickype/GoGameEngine/API/Events"
-	"github.com/Erickype/GoGameEngine/Core"
 	"github.com/go-gl/gl/v4.1-core/gl"
 	"github.com/go-gl/glfw/v3.3/glfw"
 )
@@ -12,25 +11,28 @@ var (
 	clearColor = [3]float32{0.1, 0.5, 0.8}
 )
 
-type Layer struct {
-	Core.Layer
+type ImGuiLayer struct {
+	Layer
 }
 
-func (l *Layer) OnUpdate() {
-	(*Core.ApplicationInstance.GetPlatform()).NewFrame()
+func (l *ImGuiLayer) Begin() {
+	(*ApplicationInstance.GetPlatform()).NewFrame()
 	imgui.NewFrame()
+}
 
+func (l *ImGuiLayer) OnImGuiRender() {
 	imgui.ShowDemoWindow()
+}
 
+func (l *ImGuiLayer) End() {
 	imgui.Render()
-	(*Core.ApplicationInstance.GetRenderer()).PreRender(clearColor)
-	(*Core.ApplicationInstance.GetRenderer()).Render(
-		(*Core.ApplicationInstance.GetPlatform()).DisplaySize(),
-		(*Core.ApplicationInstance.GetPlatform()).FramebufferSize(),
+	(*ApplicationInstance.GetRenderer()).Render(
+		(*ApplicationInstance.GetPlatform()).DisplaySize(),
+		(*ApplicationInstance.GetPlatform()).FramebufferSize(),
 		imgui.GetDrawData())
 }
 
-func (l *Layer) OnEvent(event *Events.IEvent) {
+func (l *ImGuiLayer) OnEvent(event *Events.IEvent) {
 	dispatcher := Events.CreateDispatcher(event)
 
 	dispatcher.Dispatch(l.OnMouseButtonPressedEvent)
@@ -43,19 +45,19 @@ func (l *Layer) OnEvent(event *Events.IEvent) {
 	dispatcher.Dispatch(l.OnWindowResizeEvent)
 }
 
-func (l *Layer) OnMouseButtonPressedEvent(event *Events.MouseButtonPressedEvent) bool {
+func (l *ImGuiLayer) OnMouseButtonPressedEvent(event *Events.MouseButtonPressedEvent) bool {
 	io := imgui.GetIO()
 	io.SetMouseButtonDown(event.GetMouseButton(), true)
 	return false
 }
 
-func (l *Layer) OnMouseButtonReleasedEvent(event *Events.MouseButtonReleaseEvent) bool {
+func (l *ImGuiLayer) OnMouseButtonReleasedEvent(event *Events.MouseButtonReleaseEvent) bool {
 	io := imgui.GetIO()
 	io.SetMouseButtonDown(event.GetMouseButton(), false)
 	return false
 }
 
-func (l *Layer) OnMouseMovedEvent(event *Events.MouseMovedEvent) bool {
+func (l *ImGuiLayer) OnMouseMovedEvent(event *Events.MouseMovedEvent) bool {
 	io := imgui.GetIO()
 	io.SetMousePos(imgui.ImVec2{
 		X: float32(event.GetX()),
@@ -64,13 +66,13 @@ func (l *Layer) OnMouseMovedEvent(event *Events.MouseMovedEvent) bool {
 	return false
 }
 
-func (l *Layer) OnMouseScrolledEvent(event *Events.MouseScrolledEvent) bool {
+func (l *ImGuiLayer) OnMouseScrolledEvent(event *Events.MouseScrolledEvent) bool {
 	io := imgui.GetIO()
 	io.AddMouseWheelDelta(float32(event.GetXOffset()), float32(event.GetYOffset()))
 	return false
 }
 
-func (l *Layer) OnKeyPressedEvent(event *Events.KeyPressedEvent) bool {
+func (l *ImGuiLayer) OnKeyPressedEvent(event *Events.KeyPressedEvent) bool {
 
 	io := imgui.GetIO()
 	iKeyEvent := Events.IKeyEvent(event)
@@ -78,7 +80,7 @@ func (l *Layer) OnKeyPressedEvent(event *Events.KeyPressedEvent) bool {
 	return false
 }
 
-func (l *Layer) OnKeyReleasedEvent(event *Events.KeyReleasedEvent) bool {
+func (l *ImGuiLayer) OnKeyReleasedEvent(event *Events.KeyReleasedEvent) bool {
 	io := imgui.GetIO()
 	iKeyEvent := Events.IKeyEvent(event)
 	io.AddKeyEvent(keyMapped(&iKeyEvent), false)
@@ -86,7 +88,7 @@ func (l *Layer) OnKeyReleasedEvent(event *Events.KeyReleasedEvent) bool {
 }
 
 func keyMapped(event *Events.IKeyEvent) imgui.ImGuiKey {
-	platform := *Core.ApplicationInstance.GetPlatform()
+	platform := *ApplicationInstance.GetPlatform()
 
 	imKey := imgui.ImGuiKey((*event).GetKeyCode())
 
@@ -96,13 +98,13 @@ func keyMapped(event *Events.IKeyEvent) imgui.ImGuiKey {
 	return imKey
 }
 
-func (l *Layer) OnKeyTypedEvent(event *Events.KeyTypedEvent) bool {
+func (l *ImGuiLayer) OnKeyTypedEvent(event *Events.KeyTypedEvent) bool {
 	io := imgui.GetIO()
 	io.AddInputCharacter(uint32(event.GetKeyCode()))
 	return false
 }
 
-func (l *Layer) OnWindowResizeEvent(event *Events.WindowResizeEvent) bool {
+func (l *ImGuiLayer) OnWindowResizeEvent(event *Events.WindowResizeEvent) bool {
 	io := imgui.GetIO()
 	io.SetDisplaySize(imgui.ImVec2{
 		X: float32(event.GetWidth()),
@@ -113,8 +115,8 @@ func (l *Layer) OnWindowResizeEvent(event *Events.WindowResizeEvent) bool {
 	gl.Viewport(0, 0, int32(event.GetWidth()), int32(event.GetHeight()))
 	return false
 }
-func NewImGui() *Layer {
-	layer := Layer{}
+func NewImGui() *ImGuiLayer {
+	layer := ImGuiLayer{}
 	layer.Construct("ImGui")
 	return &layer
 }

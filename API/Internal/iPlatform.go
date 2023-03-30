@@ -18,8 +18,6 @@ type IPlatform interface {
 	FramebufferSize() [2]float32
 	// NewFrame marks the beginning of a render pass. It must update the imGui IO state according to user input (mouse, keyboard, ...)
 	NewFrame()
-	// PostRender marks the completion of one render pass. Typically, this causes the display buffer to be swapped.
-	PostRender()
 	// ClipboardText returns the current text of the clipboard, if available.
 	ClipboardText() (string, error)
 	// SetClipboardText sets the text as the current text of the clipboard.

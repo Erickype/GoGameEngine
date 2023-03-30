@@ -60,3 +60,15 @@ created event
 ````
 eventManager.Dispatch(event)
 ````
+
+### Notice
+Develop of a game engine is really complicated and even more
+if you try to use a high or mid level language like go.
+There are the bindings from de c++ language but develop becomes
+really hard due to lack of documentation, hard in the debug process
+and the differences of the languages.
+So I will stop developing of this and focus in other projects 
+that are more suitable to the Go language, however I've learned a lot of things 
+like: the architecture of a game engine, the event system, platforms, renderers,
+layers, ImGui, entry point, to read c++ code and some particularities of the Go
+language. I really enjoyed working on this. 
